@@ -25,7 +25,7 @@
             </div>
             <div class="bottom">
                 <div class="buttons">
-                    <router-link to="/" class="main-btn up">Home</router-link>
+                    <NuxtLink to="/" class="main-btn up">Home</NuxtLink>
                 </div>
             </div>
         </div>

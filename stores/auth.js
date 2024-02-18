@@ -8,9 +8,14 @@ const { response } = responseApi();
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
-    user: null,
+    user: {
+      phone: "",
+      country_code: "",
+    },
     token: null,
     isLoggedIn: false,
+    newPhone: null,
+    shippingCount: 0,
   }),
   actions: {
     // Sign In
@@ -52,6 +57,46 @@ export const useAuthStore = defineStore("auth", {
       }
     },
 
+    // update Profile
+    async profileHandler(formData) {
+      const config = {
+        headers: { Authorization: `Bearer ${this.token}` },
+      };
+
+      const resData = await axios.post(
+        "update-profile?_method=put",
+        formData,
+        config
+      );
+      if (response(resData) == "success") {
+        this.user = resData.data.data;
+        // navigateTo("/");
+        return { status: "success", msg: resData.data.msg };
+      } else {
+        return { status: "error", msg: resData.data.msg };
+      }
+    },
+
+    // New Phone
+    async phoneHandler(formData, newPhone) {
+      const config = {
+        headers: { Authorization: `Bearer ${this.token}` },
+      };
+
+      const resData = await axios.post(
+        "change-phone-send-code",
+        formData,
+        config
+      );
+      if (response(resData) == "success") {
+        this.newPhone = newPhone;
+        navigateTo("/profile/codePhone");
+        return { status: "success", msg: resData.data.msg };
+      } else {
+        return { status: "error", msg: resData.data.msg };
+      }
+    },
+
     // Logout
     async logoutHandler() {
       const config = {
@@ -65,7 +110,36 @@ export const useAuthStore = defineStore("auth", {
         response(resData) == "unauthenticated"
       ) {
         this.token = null;
-        this.user = null;
+        this.user = {
+          phone: "",
+          country_code: "",
+        };
+
+        this.isLoggedIn = false;
+        navigateTo("/");
+        return { status: "success", msg: resData.data.msg };
+      } else {
+        return { status: "error", msg: resData.data.msg };
+      }
+    },
+
+    // delete account
+    async deleteAccountHandler() {
+      const config = {
+        headers: { Authorization: `Bearer ${this.token}` },
+      };
+
+      const resData = await axios.delete("delete-account", config);
+      if (
+        response(resData) == "success" ||
+        response(resData) == "blocked" ||
+        response(resData) == "unauthenticated"
+      ) {
+        this.token = null;
+        this.user = {
+          phone: "",
+          country_code: "",
+        };
         this.isLoggedIn = false;
         navigateTo("/");
         return { status: "success", msg: resData.data.msg };
@@ -75,6 +149,8 @@ export const useAuthStore = defineStore("auth", {
     },
   },
   persist: {
-    storage: localStorage,
+    storage: persistedState.cookiesWithOptions({
+      sameSite: "strict",
+    }),
   },
 });

@@ -9,7 +9,7 @@
 
                         <div class="input-g">
                             <div class="main-input">
-                                <input type="number" class="input-me validInputs" name="code" v-model="code"
+                                <input type="number" class="input-me validInputs" name="code"
                                     :placeholder="$t('restorePasswordForm.code.text')">
                             </div>
                         </div>
@@ -68,7 +68,15 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
-/*************** DATA **************** */
+// pinia store
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '~/stores/auth';
+
+/******************* Data *******************/
+
+// Store
+const store = useAuthStore();
+const { user } = storeToRefs(store);
 
 const newPassForm = ref(null);
 const password = ref('');
@@ -106,16 +114,13 @@ function validate() {
     }
 }
 
-let phone = ref(localStorage.getItem('phone'));
-let country_code = ref(localStorage.getItem('country_code'));
-
 // forgetPasswordCode Function
 const newPasswordFunc = async () => {
     loading.value = true;
     const fd = new FormData(newPassForm.value);
-    fd.append('phone', phone.value);
+    fd.append('phone', user.value.phone);
     fd.append('confirmPassword', confirmPassword.value);
-    fd.append('country_code', country_code.value);
+    fd.append('country_code', user.value.country_code);
 
     validate();
 
@@ -127,8 +132,11 @@ const newPasswordFunc = async () => {
 
         await axios.post('reset-password', fd).then(res => {
             if (response(res) == "success") {
-                localStorage.removeItem("phone");
-                localStorage.removeItem('country_code');
+                user.value = {
+                    phone: "",
+                    country_code: "",
+                };
+
                 successToast(res.data.msg);
                 router.push({
                     path: '/auth/Login'
@@ -143,7 +151,7 @@ const newPasswordFunc = async () => {
 
 // resendCode Function
 const resendCode = async () => {
-    await axios.get(`resend-code?country_code=${country_code.value}&phone=${phone.value}`).then(res => {
+    await axios.get(`resend-code?country_code=${user.value.country_code}&phone=${user.value.phone}`).then(res => {
         if (response(res) == "success") {
             successToast(res.data.msg);
         } else {

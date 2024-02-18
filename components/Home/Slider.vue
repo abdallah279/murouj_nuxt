@@ -44,9 +44,6 @@ const props = defineProps({
 /******************* Methods *******************/
 
 /******************* Computed *******************/
-const lang = computed(() => {
-    return localStorage.getItem('lang') == 'en' ? 'ltr' : 'rtl'
-})
 
 /******************* Watch *******************/
 

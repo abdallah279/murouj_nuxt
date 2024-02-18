@@ -52,7 +52,7 @@
                     <img src="@/assets/imgs/right_img.gif" alt="" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4">{{ $t('modals.done.changePhone') }}</p>
                     <div class="buttons justify-content-center">
-                        <router-link to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</router-link>
+                        <NuxtLink to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,15 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
+// pinia store
+import { useAuthStore } from '~/stores/auth';
+
 /******************* Data *******************/
+
+// Store
+const store = useAuthStore();
+const { token, user , newPhone} = storeToRefs(store);
+
 import codeImg from '@/assets/imgs/code.png';
 
 const loading = ref(false);
@@ -85,10 +93,6 @@ const loading = ref(false);
 const bindModal = ref("");
 // Modal
 const done = ref(false);
-
-let phone = ref(JSON.parse(localStorage.getItem('user')).phone);
-let newPhone = ref(localStorage.getItem('newPhone'));
-let country_code = ref(JSON.parse(localStorage.getItem('user')).country_code);
 
 /******************* Provide && Inject *******************/
 
@@ -98,7 +102,7 @@ let country_code = ref(JSON.parse(localStorage.getItem('user')).country_code);
 
 // config
 const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    headers: { Authorization: `Bearer ${token.value}` }
 };
 
 // newPhone Function
@@ -110,7 +114,7 @@ const verificationCode = async () => {
     await axios.post("change-phone-check-code", fd, config).then(res => {
         if (response(res) == "success") {
             done.value = true;
-            localStorage.getItem('newPhone') ? localStorage.removeItem('newPhone') : '';
+            newPhone.value = null
         } else {
             errorToast(res.data.msg)
         }
@@ -120,8 +124,7 @@ const verificationCode = async () => {
 
 // resendCode Function
 const resendCode = async () => {
-    console.log(phone.value, country_code.value);
-    await axios.get(`resend-code?country_code=${country_code.value}&phone=${phone.value}`).then(res => {
+    await axios.get(`resend-code?country_code=${user.value.country_code}&phone=${user.value.phone}`).then(res => {
         if (response(res) == "success") {
             successToast(res.data.msg);
         } else {

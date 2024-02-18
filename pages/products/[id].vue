@@ -226,7 +226,7 @@
                     <img src="@/assets/imgs/right_img.gif" alt="" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4 ff-d">{{ $t('modals.done.addDone') }}</p>
                     <div class="buttons justify-content-center">
-                        <router-link to="/cart" class="main-btn modal_btn up">{{ $t('modals.done.orderBtn') }}</router-link>
+                        <NuxtLink to="/cart" class="main-btn modal_btn up">{{ $t('modals.done.orderBtn') }}</NuxtLink>
                         <button type="button" class="main-btn modal_btn transparent" @click="done = false">
                             {{ $t('modals.done.scrollBtn') }}
                         </button>
@@ -252,8 +252,14 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
+// pinia store
+import { useAuthStore } from '~/stores/auth';
 
 /******************* Data *******************/
+
+// Store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
 
 // Route
 const route = useRoute();
@@ -391,14 +397,15 @@ const productId = computed(() => {
 });
 
 const config = computed(() => {
-    return localStorage.getItem('token') ? {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    } : {}
+  return token.value ? {
+    headers: { Authorization: `Bearer ${token.value}` }
+  } : {}
 });
 
 // countryID 
 const countryID = computed(() => {
-    return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
+    return '1'
+    // return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
 });
 
 /******************* Watch *******************/
@@ -408,6 +415,15 @@ onMounted(async () => {
     await getData();
     await getProductRate();
 });
+
+// useHead(() => {
+//   return {
+//     title: product.value.name,
+//     meta: [
+//       { name: 'description', content: product.value.description }
+//     ]
+//   }
+// });
 
 </script>
 

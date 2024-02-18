@@ -47,7 +47,15 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
+// pinia store
+import { useAuthStore } from '~/stores/auth';
+
 /******************* Data *******************/
+
+// Store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
+
 import codeImg from '@/assets/imgs/code.png';
 
 const router = useRouter();
@@ -81,14 +89,14 @@ function validate() {
     let allInputs = document.querySelectorAll('.validInputs');
     for (let i = 0; i < allInputs.length; i++) {
         if (allInputs[i].value === '') {
-            errors.value.push(i18n.global.t(`validation.${allInputs[i].name}`));
+            errors.value.push(t(`validation.${allInputs[i].name}`));
         }
     }
 }
 
 // config
 const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    headers: { Authorization: `Bearer ${token.value}` }
 };
 
 

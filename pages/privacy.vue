@@ -55,7 +55,8 @@ const getData = async () => {
 /******************* Computed *******************/
 // countryID 
 const countryID = computed(() => {
-  return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
+  return '1'
+//   return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
 });
 
 /******************* Watch *******************/

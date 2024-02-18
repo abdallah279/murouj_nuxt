@@ -374,13 +374,15 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
+// pinia store
+import { useAuthStore } from '~/stores/auth';
 
 /*************** DATA **************** */
 
 // Store
 const store = useAuthStore();
 const { logoutHandler } = store;
-const { user, isLoggedIn, token } = storeToRefs(store);
+const { user, isLoggedIn, token, shippingCount } = storeToRefs(store);
 
 // Router
 const router = useRouter();
@@ -390,7 +392,6 @@ const route = useRoute();
 
 // Active
 const active = ref(false);
-
 
 // Search
 const search = ref(false);
@@ -403,10 +404,6 @@ const cartCount = ref(0);
 
 // currency
 const currency = ref('');
-
-// Shipping Count
-// const shippingCount = ref(localStorage.getItem('shippingCount') ? localStorage.getItem('shippingCount') : 0);
-const shippingCount = ref(0);
 
 // notifications
 const notCount = ref(0);
@@ -441,19 +438,13 @@ const loadingRate = ref(false);
 const rateText = ref('');
 const done = ref(false);
 
-const config = {
+let config = {
     headers: {
         Authorization: `Bearer ${token.value}`
     }
 };
 
 /*************** Computed *****************/
-
-// Lang
-const lang = computed(() => {
-    return localStorage.getItem('lang') ? localStorage.getItem('lang') : 'ar'
-});
-
 
 /*************** Props **************** */
 
@@ -463,7 +454,6 @@ const lang = computed(() => {
 const activeFun = () => {
     active.value = !active.value;
 };
-
 
 // Get All countries
 const getCountries = async () => {
@@ -488,7 +478,7 @@ const searchFunc = async () => {
     if (searchText.value) {
         search.value = false;
         router.push({
-            path: '/Search',
+            path: '/search',
             query: { text: searchText.value },
         });
         searchText.value = '';
@@ -537,35 +527,35 @@ const returnToCountry = () => {
 }
 
 // saveLocation
-const saveLocation = () => {
-    for (let i = 0; i < countries.value.length; i++) {
-        if (countries.value[i].id == countryChecked.value) {
-            localStorage.setItem('country', JSON.stringify(countries.value[i]));
-            countryLocal.value = countries.value[i];
-        }
-    }
+// const saveLocation = () => {
+//     for (let i = 0; i < countries.value.length; i++) {
+//         if (countries.value[i].id == countryChecked.value) {
+//             localStorage.setItem('country', JSON.stringify(countries.value[i]));
+//             countryLocal.value = countries.value[i];
+//         }
+//     }
 
-    for (let i = 0; i < cities.value.length; i++) {
-        if (cities.value[i].id == cityChecked.value) {
-            localStorage.setItem('city', JSON.stringify(cities.value[i]));
-            cityLocal.value = cities.value[i];
-        }
-    }
+//     for (let i = 0; i < cities.value.length; i++) {
+//         if (cities.value[i].id == cityChecked.value) {
+//             localStorage.setItem('city', JSON.stringify(cities.value[i]));
+//             cityLocal.value = cities.value[i];
+//         }
+//     }
 
-    // getCountryAndCity();
-    mapModal.value = false;
-}
+//     // getCountryAndCity();
+//     mapModal.value = false;
+// }
 
 // Get Country And City Location
-const getCountryAndCity = () => {
-    if (localStorage.getItem('country')) {
-        countryLocal.value = JSON.parse(localStorage.getItem('country'));
-    }
+// const getCountryAndCity = () => {
+//     if (localStorage.getItem('country')) {
+//         countryLocal.value = JSON.parse(localStorage.getItem('country'));
+//     }
 
-    if (localStorage.getItem('city')) {
-        cityLocal.value = JSON.parse(localStorage.getItem('city'))
-    }
-}
+//     if (localStorage.getItem('city')) {
+//         cityLocal.value = JSON.parse(localStorage.getItem('city'))
+//     }
+// }
 
 // getLocal
 function getLocal() {
@@ -611,13 +601,12 @@ const getCartCount = async () => {
 
     await axios.get('main-cart-data', config).then(res => {
         if ((response(res) === "unauthenticated" || response(res) === "blocked") && token.value) {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
+            logout();
             router.push('/');
         } else if (response(res) === "success") {
             cartCount.value = res.data.data.count_cart_items;
             cartTotal.value = res.data.data.total;
-            // shippingCount.value = res.data.data.free_shipping_min_amount;
+            shippingCount.value = res.data.data.free_shipping_min_amount;
             currency.value = res.data.data.currency;
         }
     }).catch(err => {
@@ -628,14 +617,24 @@ const getCartCount = async () => {
 /*************** Watch **************** */
 watch(route, (newVal) => {
     active.value = false;
-    newVal.name == 'notifications' ? notCount.value = 0 : '';
-    getCartCount();
+    // newVal.name == 'notifications' ? notCount.value = 0 : '';
 });
 
-watch(isLoggedIn, (newVal) => {
-    if (newVal == true) {
+watch(token, (newVal) => {
+    if (newVal) {
+        config = {
+            headers: {
+                Authorization: `Bearer ${newVal}`
+            }
+        }
+
         getCartCount();
         getNotificationsCount();
+    } else {
+        cartCount.value = 0;
+        notCount.value = 0;
+        cartTotal.value = 0;
+        currency.value = '';
     }
 });
 
@@ -647,21 +646,21 @@ onMounted(async () => {
 
     if (isLoggedIn.value) {
         await getCities();
-        await getCartCount();
-        await getNotificationsCount();
+        await getCartCount(config);
+        await getNotificationsCount(config);
 
-        if (localStorage.getItem('country') && localStorage.getItem('city')) {
-            getCountryAndCity();
-            countryChecked.value = countryLocal.value.id;
-            cityChecked.value = cityLocal.value.id;
-        } else {
-            countryChecked.value = user.value.country_id;
-            cityChecked.value = user.value.city_id;
-            await getCities();
-            saveLocation();
-        }
+        // if (localStorage.getItem('country') && localStorage.getItem('city')) {
+        //     getCountryAndCity();
+        //     countryChecked.value = countryLocal.value.id;
+        //     cityChecked.value = cityLocal.value.id;
+        // } else {
+        //     countryChecked.value = user.value.country_id;
+        //     cityChecked.value = user.value.city_id;
+        //     await getCities();
+        //     saveLocation();
+        // }
     } else {
-        getCountryAndCity();
+        // getCountryAndCity();
     }
 })
 </script>

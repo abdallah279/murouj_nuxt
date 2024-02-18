@@ -49,8 +49,14 @@ const { response } = responseApi();
 // Axios
 const axios = useApi();
 
-/******************* DATA *******************/
+// pinia store
+import { useAuthStore } from '~/stores/auth';
 
+/******************* Data *******************/
+
+// Store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
 
 // offers
 const offers = ref([]);
@@ -91,9 +97,9 @@ const onPaginate = (e) => {
 
 /******************* Computed *******************/
 const config = computed(() => {
-    return localStorage.getItem('token') ? {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    } : {}
+  return token.value ? {
+    headers: { Authorization: `Bearer ${token.value}` }
+  } : {}
 });
 
 let showPaginate = computed(() => {
@@ -102,7 +108,8 @@ let showPaginate = computed(() => {
 
 // countryID 
 const countryID = computed(() => {
-    return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
+    return '1'
+    // return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
 });
 
 /******************* Watch *******************/

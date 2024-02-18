@@ -59,7 +59,15 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
-/******************* DATA *******************/
+// pinia store
+import { useAuthStore } from '~/stores/auth';
+
+/******************* Data *******************/
+
+// Store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
+
 import pointIMage from '@/assets/imgs/wallet.png';
 
 const pointsImg = ref(pointIMage);
@@ -73,7 +81,7 @@ const loadingCharge = ref(false);
 
 // config
 const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    headers: { Authorization: `Bearer ${token.value}` }
 };
 
 

@@ -76,10 +76,10 @@
                     <div class="foot-content">
                         <h3 class="footer-head mb-4">{{ $t('footer.quickLinks') }}</h3>
                         <div class="footer-links">
-                            <router-link to="/" class="link">{{ $t('footer.home') }}</router-link>
-                            <router-link to="/cart" class="link">{{ $t('footer.cart') }}</router-link>
-                            <router-link to="/orders" class="link">{{ $t('footer.orders') }}</router-link>
-                            <router-link to="/favorites" class="link">{{ $t('footer.fav') }}</router-link>
+                            <NuxtLink to="/" class="link">{{ $t('footer.home') }}</NuxtLink>
+                            <NuxtLink to="/cart" class="link">{{ $t('footer.cart') }}</NuxtLink>
+                            <NuxtLink to="/orders" class="link">{{ $t('footer.orders') }}</NuxtLink>
+                            <NuxtLink to="/favorites" class="link">{{ $t('footer.fav') }}</NuxtLink>
                         </div>
                     </div>
                 </div>
@@ -88,10 +88,10 @@
                     <div class="foot-content">
                         <h3 class="footer-head mb-4">{{ $t('footer.helpCenter') }}</h3>
                         <div class="footer-links">
-                            <router-link to="/contact" class="link">{{ $t('footer.contact') }}</router-link>
-                            <router-link to="/terms" class="link">{{ $t('footer.terms') }}</router-link>
-                            <router-link to="/complaints" class="link">{{ $t('footer.suggestions') }}</router-link>
-                            <router-link to="/faqs" class="link">{{ $t('footer.faqs') }}</router-link>
+                            <NuxtLink to="/contact" class="link">{{ $t('footer.contact') }}</NuxtLink>
+                            <NuxtLink to="/terms" class="link">{{ $t('footer.terms') }}</NuxtLink>
+                            <NuxtLink to="/complaints" class="link">{{ $t('footer.suggestions') }}</NuxtLink>
+                            <NuxtLink to="/faqs" class="link">{{ $t('footer.faqs') }}</NuxtLink>
                         </div>
                     </div>
                 </div>
@@ -117,9 +117,9 @@
     <section class="copy_sec py-3">
         <div class="container">
             <div class="content">
-                <router-link to="/">
+                <NuxtLink to="/">
                     <img src="@/assets/imgs/logo.png" class="logo" alt="">
-                </router-link>
+                </NuxtLink>
 
                 <div class="center">
                     <div class="social-icons mb-3 justify-content-center">
@@ -262,7 +262,8 @@ const addMail = async () => {
 /******************* Computed *******************/
 // countryID 
 const countryID = computed(() => {
-    return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
+    return '1'
+    // return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
 });
 
 // /******************* Watch *******************/

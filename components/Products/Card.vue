@@ -8,10 +8,10 @@
         </div>
         <img :src="product.image" alt="" class="product_img">
         <div class="product_body">
-            <router-link v-if="!view" :to="`/products/${productId}`" class="product_name">
+            <NuxtLink v-if="!view" :to="`/products/${productId}`" class="product_name">
                 <i class="pi pi-arrow-left c-main"></i>
                 {{ product.name }}
-            </router-link>
+            </NuxtLink>
             <h3 v-if="view" class="product_name">{{ product.name }}</h3>
             <Rating v-if="!view" v-model="product.avg_rate" class="my-2 small" readonly :cancel="false" />
             <div class="price_con" v-if="!view">
@@ -42,8 +42,14 @@ const { response } = responseApi();
 // Axios
 const axios = useApi();
 
+// pinia store
+import { useAuthStore } from '~/stores/auth';
 
 /******************* Data *******************/
+
+// Store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
 
 // Fav
 const fav = ref(0);
@@ -71,7 +77,7 @@ const props = defineProps({
 
 // config
 const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    headers: { Authorization: `Bearer ${token.value}` }
 };
 
 // Toggle favourite Function

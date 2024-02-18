@@ -12,7 +12,7 @@
                             <div class="main-input">
                                 <input type="number" class="input-me validInputs" name="phone" v-model="phone"
                                     :placeholder="$t('restorePasswordForm.phone.placeholder')">
-                                <Dropdown v-model="selectedCountry" @change="log" :options="countries" optionLabel="name"
+                                <Dropdown v-model="selectedCountry" :options="countries" optionLabel="name"
                                     class="main-icon selectedCountry">
                                     <template #value="slotProps">
                                         <div v-if="slotProps.value" class="selected">
@@ -68,7 +68,15 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
-/*************** DATA **************** */
+// pinia store
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '~/stores/auth';
+
+/******************* Data *******************/
+
+// Store
+const store = useAuthStore();
+const { user } = storeToRefs(store);
 
 // success response
 
@@ -127,8 +135,8 @@ const forgetPasswordFunc = async () => {
 
         await axios.post('forget-password-send-code', fd).then(res => {
             if (response(res) == "success") {
-                localStorage.setItem('country_code', selectedCountry.value.key);
-                localStorage.setItem('phone', phone.value);
+                user.value.phone = phone.value;
+                user.value.country_code = selectedCountry.value.key;
 
                 successToast(res.data.msg);
 

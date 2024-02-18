@@ -1,42 +1,41 @@
 <template>
-    <main class="home">
-  
-      <!-- Slider One -->
-      <HomeSlider :slider="sliderOne" :loading="loading" />
-      
-  
-      <!-- Categories -->
-      <HomeCategories :categoriesItems="categories" :loading="loading" />
-  
-      <!-- Newly Added -->
-      <HomeProducts :title="newlyAdded.title" :products="newlyAdded.products" route="/newlyAdded"
-        :loading="loading" />
-  
-      <!-- Slider Two -->
-      <HomeSlider :slider="sliderTwo" class="my-5" :loading="loading" />
-  
-      <!-- All Products -->
-      <HomeProducts class="mb-5" v-for="item in categoriesProducts" :key="item.id" :title="item.name"
-        :products="item.products" :route="`/categories/${item.id}`" :loading="loading" />
-  
-      <!-- Product Skeleton -->
-      <div class="container mb-5" v-if="loading">
-        <ProductsSkeleton />
-      </div>
-  
-      <!-- Advantages -->
-      <HomeAdvantages />
-  
-      <!-- Customers Opinions -->
-      <!-- <HomeOpinions /> -->
-  
-    </main>
-  
-    <!-- Alert Modal -->
-    <Dialog id="alert" class="xl alert_modal" v-model:visible="alertModal" modal>
-      <img src="@/assets/imgs/alert_img.png" alt="" class="alert_img">
-    </Dialog>
-  </template>
+  <main class="home">
+
+    <!-- Slider One -->
+    <HomeSlider :slider="sliderOne" :loading="loading" />
+
+
+    <!-- Categories -->
+    <HomeCategories :categoriesItems="categories" :loading="loading" />
+
+    <!-- Newly Added -->
+    <HomeProducts :title="newlyAdded.title" :products="newlyAdded.products" route="/newlyAdded" :loading="loading" />
+
+    <!-- Slider Two -->
+    <HomeSlider :slider="sliderTwo" class="my-5" :loading="loading" />
+
+    <!-- All Products -->
+    <HomeProducts class="mb-5" v-for="item in categoriesProducts" :key="item.id" :title="item.name"
+      :products="item.products" :route="`/categories/${item.id}`" :loading="loading" />
+
+    <!-- Product Skeleton -->
+    <div class="container mb-5" v-if="loading">
+      <ProductsSkeleton />
+    </div>
+
+    <!-- Advantages -->
+    <HomeAdvantages />
+
+    <!-- Customers Opinions -->
+    <!-- <HomeOpinions /> -->
+
+  </main>
+
+  <!-- Alert Modal -->
+  <Dialog id="alert" class="xl alert_modal" v-model:visible="alertModal" modal>
+    <img src="@/assets/imgs/alert_img.png" alt="" class="alert_img">
+  </Dialog>
+</template>
 
 <script setup>
 /******************* Plugins *******************/
@@ -53,7 +52,7 @@ const axios = useApi();
 
 // Store
 const store = useAuthStore();
-const { isLoggedIn } = storeToRefs(store);
+const { isLoggedIn, token } = storeToRefs(store);
 
 // Route
 const route = useRoute();
@@ -93,7 +92,7 @@ const getData = async () => {
       sliderTwo.value = res.data.data.second_banner;
       newlyAdded.value.products = res.data.data.recently_added;
       categoriesProducts.value = res.data.data.categories_sections;
-      localStorage.setItem('shippingCount', res.data.data.free_shipping_min_amount);
+      // localStorage.setItem('shippingCount', res.data.data.free_shipping_min_amount);
     }
     loading.value = false;
   }).catch(err => console.log(err));
@@ -102,14 +101,15 @@ const getData = async () => {
 /******************* Computed *******************/
 
 const config = computed(() => {
-  return localStorage.getItem('token') ? {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  return token.value ? {
+    headers: { Authorization: `Bearer ${token.value}` }
   } : {}
 });
 
 // countryID 
 const countryID = computed(() => {
-  return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
+  return '1'
+  // return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
 });
 
 /******************* Watch *******************/

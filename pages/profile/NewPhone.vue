@@ -70,7 +70,16 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
+// pinia store
+import { useAuthStore } from '~/stores/auth';
+
 /******************* Data *******************/
+
+// Store
+const store = useAuthStore();
+const { phoneHandler } = store;
+const { token } = storeToRefs(store);
+
 import codeImg from '@/assets/imgs/code.png';
 
 const newPhoneForm = ref(null);
@@ -83,14 +92,12 @@ const errors = ref([]);
 const countries = ref([]);
 const selectedCountry = ref({});
 
-// User
-// const user = JSON.parse(localStorage.getItem('user'));
-
 /******************* Provide && Inject *******************/
 
 /******************* Props *******************/
 
 /******************* Methods *******************/
+
 // Get All countries
 const getCountries = async () => {
     await axios.get('countries').then(res => {
@@ -110,14 +117,14 @@ function validate() {
     let allInputs = document.querySelectorAll('.validInputs');
     for (let i = 0; i < allInputs.length; i++) {
         if (allInputs[i].value === '') {
-            errors.value.push(i18n.global.t(`validation.${allInputs[i].name}`));
+            errors.value.push(t(`validation.${allInputs[i].name}`));
         }
     }
 }
 
 // config
 const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    headers: { Authorization: `Bearer ${token.value}` }
 };
 
 // newPhone Function
@@ -133,21 +140,14 @@ const newPhone = async () => {
         loading.value = false;
         errors.value = [];
     } else {
-        await axios.post('change-phone-send-code', fd, config).then(res => {
-            if (response(res) == "success") {
 
-                localStorage.setItem('newPhone', phone.value);
+        loading.value = true;
 
-                successToast(res.data.msg);
-                router.push({
-                    path: '/profile/codePhone'
-                });
+        // Get Returned Data From Store
+        const res = await phoneHandler(fd, phone.value);
+        res.status == "success" ? successToast(res.msg) : errorToast(res.msg);
 
-            } else {
-                errorToast(res.data.msg);
-            }
-            loading.value = false;
-        }).catch(err => console.log(err));
+        loading.value = false;
     }
 }
 

@@ -120,7 +120,7 @@
                     <img src="@/assets/imgs/right_img.gif" alt="" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4">{{ $t('modals.done.text') }}</p>
                     <div class="buttons justify-content-center">
-                        <router-link to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</router-link>
+                        <NuxtLink to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>
                     </div>
                 </div>
             </div>
@@ -142,7 +142,14 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
+// pinia store
+import { useAuthStore } from '~/stores/auth';
+
 /******************* Data *******************/
+
+// Store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
 
 
 // Form
@@ -222,14 +229,14 @@ function validate() {
     let allInputs = document.querySelectorAll('.validInputs');
     for (let i = 0; i < allInputs.length; i++) {
         if (allInputs[i].value === '') {
-            errors.value.push(i18n.global.t(`validation.${allInputs[i].name}`));
+            errors.value.push(t(`validation.${allInputs[i].name}`));
         }
     }
 }
 
 // config
 const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    headers: { Authorization: `Bearer ${token.value}` }
 };
 
 // contactUs Function

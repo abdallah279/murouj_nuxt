@@ -169,11 +169,11 @@
                             {{ $t('modals.deleteAccount.returnBtn') }}
                         </button>
 
-                        <button type="button" @click="deleteAccount" class="main-btn modal_btn light" :disabled="loading">
-                            <span v-if="!loading">
+                        <button type="button" @click="deleteAccount" class="main-btn modal_btn light" :disabled="loadingDelete">
+                            <span v-if="!loadingDelete">
                                 {{ $t('modals.deleteAccount.deleteBtn') }}
                             </span>
-                            <div v-if="loading">
+                            <div v-if="loadingDelete">
                                 {{ $t('formBtns.delteLoading') }}
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             </div>
@@ -237,7 +237,7 @@
                     <img src="@/assets/imgs/right_img.gif" alt="" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4">{{ $t('modals.done.changePass') }}</p>
                     <div class="buttons justify-content-center">
-                        <router-link to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</router-link>
+                        <NuxtLink to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>
                     </div>
                 </div>
             </div>
@@ -260,7 +260,16 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
+// pinia store
+import { useAuthStore } from '~/stores/auth';
+
 /******************* Data *******************/
+
+// Store
+const store = useAuthStore();
+const { profileHandler, deleteAccountHandler } = store;
+const { token } = storeToRefs(store);
+
 import proImage from "@/assets/imgs/profile.png";
 
 // Router
@@ -272,6 +281,7 @@ const changePasswordForm = ref(null);
 
 const loading = ref(false);
 const loadingPass = ref(false);
+const loadingDelete = ref(false);
 const errors = ref([]);
 
 // Profile data
@@ -335,18 +345,18 @@ function validate() {
     let allInputs = document.querySelectorAll('.validInputsPassword');
     for (let i = 0; i < allInputs.length; i++) {
         if (allInputs[i].value === '') {
-            errors.value.push(i18n.global.t(`validation.${allInputs[i].name}`));
+            errors.value.push(t(`validation.${allInputs[i].name}`));
         }
     }
 
     if (password.value !== confirmPassword.value) {
-        errors.value.push(i18n.global.t(`validation.confirmPassword`));
+        errors.value.push(t(`validation.confirmPassword`));
     }
 }
 
 // config
 const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    headers: { Authorization: `Bearer ${token.value}` }
 };
 
 // Get All countries
@@ -380,19 +390,19 @@ const getCities = async () => {
 }
 
 // saveLocation
-const saveLocation = (country, city) => {
-    for (let i = 0; i < countries.value.length; i++) {
-        if (countries.value[i].id == country) {
-            localStorage.setItem('country', JSON.stringify(countries.value[i]));
-        }
-    }
+// const saveLocation = (country, city) => {
+//     for (let i = 0; i < countries.value.length; i++) {
+//         if (countries.value[i].id == country) {
+//             localStorage.setItem('country', JSON.stringify(countries.value[i]));
+//         }
+//     }
 
-    for (let i = 0; i < cities.value.length; i++) {
-        if (cities.value[i].id == city) {
-            localStorage.setItem('city', JSON.stringify(cities.value[i]));
-        }
-    }
-}
+//     for (let i = 0; i < cities.value.length; i++) {
+//         if (cities.value[i].id == city) {
+//             localStorage.setItem('city', JSON.stringify(cities.value[i]));
+//         }
+//     }
+// }
 
 // profile Function
 const profile = async () => {
@@ -414,45 +424,25 @@ const editAccount = async () => {
     fd.append('country_id', country.value.id);
     fd.append('city_id', city.value.id);
 
-    await axios.post('update-profile?_method=put', fd, config).then(res => {
-        if (response(res) == "success") {
-            localStorage.setItem('user', JSON.stringify(res.data.data));
-            // document.querySelector('.drop-text.profile').innerHTML = res.data.data.name;
+    loading.value = true;
 
-            saveLocation(res.data.data.country_id, res.data.data.city_id);
-            successToast(res.data.msg);
-        } else {
-            errorToast(res.data.msg);
-        }
-        loading.value = false;
-    }).catch(err => console.log(err));
+    // Get Returned Data From Store
+    const res = await profileHandler(fd);
+    res.status == "success" ? successToast(res.msg) : errorToast(res.msg);
+
+    loading.value = false;
 
 }
 
 // Delete Account
 const deleteAccount = async () => {
-    loading.value = true;
-    await axios.delete('delete-account', config).then(res => {
-        deleteAcc.value = false;
-        if (response(res) == "success") {
+    loadingDelete.value = true;
 
-            let lKeys = ['token', 'user', 'country', 'city'];
+    // Get Returned Data From Store
+    const res = await deleteAccountHandler();
+    res.status == "success" ? successToast(res.msg) : errorToast(res.msg);
 
-            lKeys.forEach((key) => {
-                localStorage.removeItem(key);
-            });
-
-            successToast(res.data.msg);
-
-            router.push({
-                name: 'home'
-            });
-
-        } else {
-            errorToast(res.data.msg);
-        }
-        loading.value = false;
-    }).catch(err => console.log(err));
+    loadingDelete.value = false;
 }
 
 // changePassword
@@ -486,17 +476,13 @@ const changePassword = async () => {
 
 /******************* Computed *******************/
 
-const lang = computed(() => {
-    return localStorage.getItem('lang') ? localStorage.getItem('lang') : 'ar'
-});
-
 /******************* Watch *******************/
 
 /******************* Mounted *******************/
 onMounted(async () => {
     await profile();
     await getCountries();
-    if(country.value.id){
+    if (country.value.id) {
         await getCities();
     }
 })

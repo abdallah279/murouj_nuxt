@@ -319,9 +319,6 @@ const signUp = async () => {
 
 
 /******************* Computed *******************/
-const lang = computed(() => {
-    return localStorage.getItem('lang') ? localStorage.getItem('lang') : 'ar'
-});
 
 /******************* Watch *******************/
 

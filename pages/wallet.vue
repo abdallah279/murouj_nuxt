@@ -129,7 +129,7 @@
                     <img src="@/assets/imgs/right_img.gif" alt="" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4">{{ doneText }}</p>
                     <div class="buttons justify-content-center">
-                        <router-link to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</router-link>
+                        <NuxtLink to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>
                     </div>
                 </div>
             </div>
@@ -149,7 +149,15 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
-/******************* DATA *******************/
+// pinia store
+import { useAuthStore } from '~/stores/auth';
+
+/******************* Data *******************/
+
+// Store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
+
 import pointIMage from '@/assets/imgs/wallet.png';
 
 // Wallet Data
@@ -173,7 +181,7 @@ const doneText = ref('');
 
 // config
 const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    headers: { Authorization: `Bearer ${token.value}` }
 };
 
 /******************* Provide && Inject *******************/

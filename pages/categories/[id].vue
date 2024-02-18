@@ -139,7 +139,14 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
+// pinia store
+import { useAuthStore } from '~/stores/auth';
+
 /******************* Data *******************/
+
+// Store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
 
 // route
 const route = useRoute();
@@ -278,14 +285,15 @@ const categoryId = computed(() => {
 
 // Config
 const config = computed(() => {
-    return localStorage.getItem('token') ? {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    } : {}
+  return token.value ? {
+    headers: { Authorization: `Bearer ${token.value}` }
+  } : {}
 });
 
 // countryID 
 const countryID = computed(() => {
-    return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
+    return '1'
+    // return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
 });
 
 // showPaginate

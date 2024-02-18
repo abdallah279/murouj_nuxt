@@ -3,9 +3,9 @@
         <div class="container">
             <PageHeader :title="$t('pagesTitle.suggestions')" :desc="$t('sectionDesc.complaints')" margin="mb-4" />
 
-            <router-link to="/complaints/create" class="main-btn mx-auto lg mb-5 up">
+            <NuxtLink to="/complaints/create" class="main-btn mx-auto lg mb-5 up">
                 {{ $t('formBtns.addComplaints') }}
-            </router-link>
+            </NuxtLink>
 
             <div class="row">
                 <div class="col-xl-8 col-lg-10 mx-auto">
@@ -38,7 +38,14 @@ const { response } = responseApi();
 // Axios
 const axios = useApi();
 
+// pinia store
+import { useAuthStore } from '~/stores/auth';
+
 /******************* Data *******************/
+
+// Store
+const store = useAuthStore();
+const { token } = storeToRefs(store);
 
 // loading
 const loading = ref(false);
@@ -48,7 +55,7 @@ const complaints = ref([]);
 
 // config
 const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    headers: { Authorization: `Bearer ${token.value}` }
 };
 
 /******************* Provide && Inject *******************/
