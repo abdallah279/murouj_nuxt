@@ -31,6 +31,7 @@
     "primevue": "^3.46.0",
     "sass": "^1.70.0",
     "vue-carousel-card": "^2.0.0",
+    "vue-google-maps-ui": "^1.0.0",
     "vue3-otp-input": "^0.4.1"
   }
 }

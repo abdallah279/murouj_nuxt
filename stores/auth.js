@@ -15,9 +15,9 @@ export const useAuthStore = defineStore("auth", {
     token: null,
     isLoggedIn: false,
     newPhone: null,
-    shippingCount: 0,
   }),
   actions: {
+
     // Sign In
     async signInHandler(formData) {
       const resData = await axios.post("sign-in?count_notifications", formData);

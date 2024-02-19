@@ -48,7 +48,15 @@ const { response } = responseApi();
 // Axios
 const axios = useApi();
 
+// pinia store
+import { useAuthStore } from '~/stores/auth';
+import { useGlobalStore } from '~/stores/global';
+
 /*************** DATA **************** */
+
+// Global Store
+const globalStore = useGlobalStore();
+const { shippingCount } = storeToRefs(globalStore);
 
 // Store
 const store = useAuthStore();
@@ -92,7 +100,7 @@ const getData = async () => {
       sliderTwo.value = res.data.data.second_banner;
       newlyAdded.value.products = res.data.data.recently_added;
       categoriesProducts.value = res.data.data.categories_sections;
-      // localStorage.setItem('shippingCount', res.data.data.free_shipping_min_amount);
+      shippingCount.value = res.data.data.free_shipping_min_amount;
     }
     loading.value = false;
   }).catch(err => console.log(err));

@@ -306,18 +306,20 @@
 
 
     <!-- Map Modal -->
-    <!-- <Dialog id="map" class="xl" :header="$t('modals.location.header')" v-model:visible="mapModal" modal>
-        <div class="row">
-            <div class="col-lg-11 mx-auto">
-                <form action="" class="modal-form" @submit.prevent="saveLocation">
-                    <Googlemap apiKey="AIzaSyBNLoYGrbnQI_GMqHt6m0PSN9yA7Zvq7gA" :location="location" height="290px" />
-                    <div class="buttons justify-content-center mt-4">
-                        <button type="submit" class="main-btn modal_btn up">{{ $t('modals.location.btn') }}</button>
-                    </div>
-                </form>
+    <ClientOnly>
+        <Dialog id="map" class="xl" :header="$t('modals.location.header')" v-model:visible="mapModal" modal>
+            <div class="row">
+                <div class="col-lg-11 mx-auto">
+                    <form action="" class="modal-form" @submit.prevent="saveLocation">
+                        <GoogleMap apiKey="AIzaSyBNLoYGrbnQI_GMqHt6m0PSN9yA7Zvq7gA" :location="location" height="290px" />
+                        <div class="buttons justify-content-center mt-4">
+                            <button type="submit" class="main-btn modal_btn up">{{ $t('modals.location.btn') }}</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
-    </Dialog> -->
+        </Dialog>
+    </ClientOnly>
 
 
     <!-- Rate Modal -->
@@ -362,6 +364,11 @@
 
 <script setup>
 /******************* Plugins Or Composables *******************/
+
+// Map
+import GoogleMap from 'vue-google-maps-ui';
+
+// Translate
 import { useI18n } from 'vue-i18n';
 const { locale, t } = useI18n({ useScope: 'global' });
 
@@ -376,13 +383,17 @@ const axios = useApi();
 
 // pinia store
 import { useAuthStore } from '~/stores/auth';
+import { useGlobalStore } from '~/stores/global';
 
 /*************** DATA **************** */
 
 // Store
 const store = useAuthStore();
+const globalStore = useGlobalStore();
+
 const { logoutHandler } = store;
-const { user, isLoggedIn, token, shippingCount } = storeToRefs(store);
+const { user, isLoggedIn, token } = storeToRefs(store);
+const { shippingCount, cityLocal, countryLocal } = storeToRefs(globalStore);
 
 // Router
 const router = useRouter();
@@ -412,20 +423,11 @@ const notCount = ref(0);
 const countryModal = ref(false);
 const countryChecked = ref('');
 const countries = ref([]);
-const countryLocal = ref({
-    "id": 1,
-    "name": t('country.country'),
-    "key": "966"
-});
 
 // city
 const cityModal = ref(false);
 const cityChecked = ref('');
 const cities = ref([]);
-const cityLocal = ref({
-    "id": 3,
-    "name": t('country.city'),
-});
 
 // map
 const mapModal = ref(false);
@@ -465,8 +467,8 @@ const getCountries = async () => {
 }
 
 // Get All Cities
-const getCities = async () => {
-    await axios.get(`country/${countryChecked.value}/cities`).then(res => {
+const getCities = async (countryId = countryChecked.value) => {
+    await axios.get(`country/${countryId}/cities`).then(res => {
         if (response(res) == "success") {
             cities.value = res.data.data;
         }
@@ -527,35 +529,27 @@ const returnToCountry = () => {
 }
 
 // saveLocation
-// const saveLocation = () => {
-//     for (let i = 0; i < countries.value.length; i++) {
-//         if (countries.value[i].id == countryChecked.value) {
-//             localStorage.setItem('country', JSON.stringify(countries.value[i]));
-//             countryLocal.value = countries.value[i];
-//         }
-//     }
+const saveLocation = (countryId = countryChecked.value, cityId = cityChecked.value) => {
+    for (let i = 0; i < countries.value.length; i++) {
+        if (countries.value[i].id == countryId) {
+            countryLocal.value = countries.value[i];
+        }
+    }
 
-//     for (let i = 0; i < cities.value.length; i++) {
-//         if (cities.value[i].id == cityChecked.value) {
-//             localStorage.setItem('city', JSON.stringify(cities.value[i]));
-//             cityLocal.value = cities.value[i];
-//         }
-//     }
+    for (let i = 0; i < cities.value.length; i++) {
+        if (cities.value[i].id == cityId) {
+            cityLocal.value = cities.value[i];
+        }
+    }
 
-//     // getCountryAndCity();
-//     mapModal.value = false;
-// }
+    mapModal.value = false;
+}
 
 // Get Country And City Location
-// const getCountryAndCity = () => {
-//     if (localStorage.getItem('country')) {
-//         countryLocal.value = JSON.parse(localStorage.getItem('country'));
-//     }
-
-//     if (localStorage.getItem('city')) {
-//         cityLocal.value = JSON.parse(localStorage.getItem('city'))
-//     }
-// }
+const getCountryAndCity = (countryId = countryLocal.value.id, cityId = cityLocal.value.id) => {
+    countryChecked.value = countryId;
+    cityChecked.value = cityId;
+}
 
 // getLocal
 function getLocal() {
@@ -606,7 +600,6 @@ const getCartCount = async () => {
         } else if (response(res) === "success") {
             cartCount.value = res.data.data.count_cart_items;
             cartTotal.value = res.data.data.total;
-            shippingCount.value = res.data.data.free_shipping_min_amount;
             currency.value = res.data.data.currency;
         }
     }).catch(err => {
@@ -620,7 +613,7 @@ watch(route, (newVal) => {
     // newVal.name == 'notifications' ? notCount.value = 0 : '';
 });
 
-watch(token, (newVal) => {
+watch(token, async (newVal) => {
     if (newVal) {
         config = {
             headers: {
@@ -630,11 +623,15 @@ watch(token, (newVal) => {
 
         getCartCount();
         getNotificationsCount();
+        getCountryAndCity(user.value.country_id, user.value.city_id);
+        saveLocation(user.value.country_id, user.value.city_id);
     } else {
         cartCount.value = 0;
         notCount.value = 0;
         cartTotal.value = 0;
         currency.value = '';
+        getCountryAndCity();
+        saveLocation();
     }
 });
 
@@ -645,24 +642,17 @@ onMounted(async () => {
     await getCountries();
 
     if (isLoggedIn.value) {
-        await getCities();
-        await getCartCount(config);
-        await getNotificationsCount(config);
-
-        // if (localStorage.getItem('country') && localStorage.getItem('city')) {
-        //     getCountryAndCity();
-        //     countryChecked.value = countryLocal.value.id;
-        //     cityChecked.value = cityLocal.value.id;
-        // } else {
-        //     countryChecked.value = user.value.country_id;
-        //     cityChecked.value = user.value.city_id;
-        //     await getCities();
-        //     saveLocation();
-        // }
+        await getCartCount();
+        await getNotificationsCount();
+        await getCities(user.value.country_id);
+        getCountryAndCity(user.value.country_id, user.value.city_id);
+        saveLocation(user.value.country_id, user.value.city_id);
     } else {
-        // getCountryAndCity();
+        getCountryAndCity();
     }
-})
+
+    console.log(countryLocal.value, cityLocal.value);
+});
 </script>
 
 <style lang="scss" scoped></style>

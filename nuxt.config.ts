@@ -29,5 +29,5 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
   ],
-  devtools: { enabled: true },
+  devtools: { enabled: false },
 });

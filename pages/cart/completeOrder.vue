@@ -279,15 +279,18 @@
     </main>
 
     <!-- Address Modal -->
-    <Dialog id="map" class="xl address" :header="$t('modals.address.header')" v-model:visible="mapModal" modal>
-        <div class="modal-form position-relative">
-            <div class="address_text"><i class="pi pi-map-marker"></i> {{ address }} </div>
-            <Googlemap apiKey="AIzaSyBNLoYGrbnQI_GMqHt6m0PSN9yA7Zvq7gA" language="ar" @change-address="changeAddress"
-                height="360px" />
-            <button type="button" @click="mapModal = false" class="main-btn modal_btn up">{{ $t('modals.address.btn')
-            }}</button>
-        </div>
-    </Dialog>
+    <ClientOnly>
+        <Dialog id="map" class="xl address" :header="$t('modals.address.header')" v-model:visible="mapModal" modal>
+            <div class="modal-form position-relative">
+                <div class="address_text"><i class="pi pi-map-marker"></i> {{ address }} </div>
+                <GoogleMap apiKey="AIzaSyBNLoYGrbnQI_GMqHt6m0PSN9yA7Zvq7gA" language="ar" @change-address="changeAddress"
+                    height="360px" />
+                <button type="button" @click="mapModal = false" class="main-btn modal_btn up">
+                    {{ $t('modals.address.btn') }}
+                </button>
+            </div>
+        </Dialog>
+    </ClientOnly>
 
     <!-- Done Modal -->
     <Dialog id="done" class="xl" v-model:visible="done" modal>
@@ -298,8 +301,7 @@
                     <p class="fs14 c-black text-center mb-4">{{ $t('modals.done.orderDone') }}</p>
                     <div class="buttons justify-content-center">
                         <NuxtLink to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>
-                        <NuxtLink :to="`orders/${order_id}`"
-                            class="main-btn modal_btn transparent">
+                        <NuxtLink :to="`orders/${order_id}`" class="main-btn modal_btn transparent">
                             {{ $t('modals.done.followBtn') }}
                         </NuxtLink>
                     </div>
@@ -307,10 +309,15 @@
             </div>
         </div>
     </Dialog>
+
 </template>
 
 <script setup>
-/******************* Import *******************/
+/******************* Plugins Or Composables *******************/
+
+// Map
+import GoogleMap from 'vue-google-maps-ui';
+
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n({ useScope: 'global' });
 

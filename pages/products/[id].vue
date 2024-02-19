@@ -197,7 +197,7 @@
                             </div>
                             <div class="d-flex gap-3 mb-2">
                                 <span class="c-dark3 fs13"> {{ $t('modals.rateModal.value') }}</span>
-                                <Rating v-model="rateItem.stars" class="small gap-1 cu-pointer" readonly :cancel="false" />
+                                <Rating v-model="rateItem.stars" class="small gap-1" readonly :cancel="false" />
                             </div>
                             <p class="fs14 c-black">{{ rateItem.comment }}</p>
                         </div>
