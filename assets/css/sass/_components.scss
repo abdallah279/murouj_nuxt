@@ -1752,6 +1752,7 @@
     transition: $main-transition;
     background-color: #fafaf9;
     border: 1px solid transparent;
+    overflow: visible !important;
 
     @media screen and (max-width: $screen-xs) {
       min-height: 44px;
@@ -1782,6 +1783,7 @@
 
       &::placeholder {
         opacity: 0;
+        // transform: translatex(100px);
       }
     }
 

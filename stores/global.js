@@ -9,13 +9,15 @@ export const useGlobalStore = defineStore("global", {
   state: () => ({
     shippingCount: 0,
     countryLocal: {
-      id: 1,
-      name: 't("country.country")',
+      id: null,
+      name: "",
     },
     cityLocal: {
-      id: 3,
-      name: 't("country.city")',
+      id: null,
+      name: "",
     },
+    countryChanged: false,
+    countryID: 1,
   }),
   actions: {},
   persist: {

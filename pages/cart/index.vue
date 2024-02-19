@@ -193,6 +193,10 @@ onMounted(async () => {
     await getCart(true);
 });
 
+definePageMeta({
+  middleware: 'auth'
+})
+
 </script>
 
 <style lang="scss"></style>

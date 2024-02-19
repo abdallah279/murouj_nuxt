@@ -52,11 +52,11 @@ const axios = useApi();
 import { useAuthStore } from '~/stores/auth';
 import { useGlobalStore } from '~/stores/global';
 
-/*************** DATA **************** */
+/*************** DATA *****************/
 
 // Global Store
 const globalStore = useGlobalStore();
-const { shippingCount } = storeToRefs(globalStore);
+const { shippingCount, countryLocal, countryID } = storeToRefs(globalStore);
 
 // Store
 const store = useAuthStore();
@@ -114,12 +114,6 @@ const config = computed(() => {
   } : {}
 });
 
-// countryID 
-const countryID = computed(() => {
-  return '1'
-  // return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
-});
-
 /******************* Watch *******************/
 
 watch(isLoggedIn, () => {
@@ -127,6 +121,12 @@ watch(isLoggedIn, () => {
     setTimeout(() => {
       alertModal.value = true;
     }, 5000);
+  }
+});
+
+watch(countryLocal, async (newVal) => {
+  if (newVal) {
+    await getData();
   }
 });
 

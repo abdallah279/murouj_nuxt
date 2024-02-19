@@ -385,7 +385,7 @@ const axios = useApi();
 import { useAuthStore } from '~/stores/auth';
 import { useGlobalStore } from '~/stores/global';
 
-/*************** DATA **************** */
+/*************** DATA *****************/
 
 // Store
 const store = useAuthStore();
@@ -393,7 +393,7 @@ const globalStore = useGlobalStore();
 
 const { logoutHandler } = store;
 const { user, isLoggedIn, token } = storeToRefs(store);
-const { shippingCount, cityLocal, countryLocal } = storeToRefs(globalStore);
+const { shippingCount, cityLocal, countryLocal, countryChanged, countryID } = storeToRefs(globalStore);
 
 // Router
 const router = useRouter();
@@ -458,10 +458,16 @@ const activeFun = () => {
 };
 
 // Get All countries
-const getCountries = async () => {
+const getCountries = async (getCity = false) => {
     await axios.get('countries').then(res => {
         if (response(res) == "success") {
             countries.value = res.data.data;
+
+            if(countryChanged.value == false && getCity){
+                countryLocal.value = res.data.data[0];
+                getCities(res.data.data[0].id);
+                countryID.value = res.data.data[0].id;
+            }
         }
     }).catch(err => console.log(err));
 }
@@ -471,6 +477,10 @@ const getCities = async (countryId = countryChecked.value) => {
     await axios.get(`country/${countryId}/cities`).then(res => {
         if (response(res) == "success") {
             cities.value = res.data.data;
+
+            if(countryChanged.value == false){
+                cityLocal.value = res.data.data[0];
+            }
         }
     }).catch(err => console.log(err));
 }
@@ -531,8 +541,13 @@ const returnToCountry = () => {
 // saveLocation
 const saveLocation = (countryId = countryChecked.value, cityId = cityChecked.value) => {
     for (let i = 0; i < countries.value.length; i++) {
+        if (typeof countryId == 'object') {
+            countryId = countryChecked.value
+        }
+
         if (countries.value[i].id == countryId) {
             countryLocal.value = countries.value[i];
+            countryID.value = countryId;
         }
     }
 
@@ -542,6 +557,7 @@ const saveLocation = (countryId = countryChecked.value, cityId = cityChecked.val
         }
     }
 
+    countryChanged.value = true;
     mapModal.value = false;
 }
 
@@ -608,6 +624,7 @@ const getCartCount = async () => {
 }
 
 /*************** Watch **************** */
+
 watch(route, (newVal) => {
     active.value = false;
     // newVal.name == 'notifications' ? notCount.value = 0 : '';
@@ -623,6 +640,7 @@ watch(token, async (newVal) => {
 
         getCartCount();
         getNotificationsCount();
+        await getCities(user.value.country_id);
         getCountryAndCity(user.value.country_id, user.value.city_id);
         saveLocation(user.value.country_id, user.value.city_id);
     } else {
@@ -639,19 +657,23 @@ watch(token, async (newVal) => {
 
 onMounted(async () => {
     getLocal();
-    await getCountries();
+    await getCountries(true);
 
     if (isLoggedIn.value) {
         await getCartCount();
         await getNotificationsCount();
-        await getCities(user.value.country_id);
-        getCountryAndCity(user.value.country_id, user.value.city_id);
-        saveLocation(user.value.country_id, user.value.city_id);
+
+        if (countryChanged.value == false) {
+            await getCities(user.value.country_id);
+            getCountryAndCity(user.value.country_id, user.value.city_id);
+            saveLocation(user.value.country_id, user.value.city_id);
+        } else{
+            getCountryAndCity();
+        }
     } else {
         getCountryAndCity();
     }
 
-    console.log(countryLocal.value, cityLocal.value);
 });
 </script>
 

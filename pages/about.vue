@@ -65,6 +65,10 @@ onMounted(async () => {
     await getAbout();
 });
 
+definePageMeta({
+  middleware: 'auth'
+})
+
 </script>
 
 <style lang="scss"></style>
