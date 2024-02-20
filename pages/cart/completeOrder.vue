@@ -301,7 +301,7 @@
                     <p class="fs14 c-black text-center mb-4">{{ $t('modals.done.orderDone') }}</p>
                     <div class="buttons justify-content-center">
                         <NuxtLink to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>
-                        <NuxtLink :to="`orders/${order_id}`" class="main-btn modal_btn transparent">
+                        <NuxtLink :to="`/orderDetails/${order_id}`" class="main-btn modal_btn transparent">
                             {{ $t('modals.done.followBtn') }}
                         </NuxtLink>
                     </div>

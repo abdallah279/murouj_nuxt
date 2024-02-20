@@ -3,10 +3,10 @@
 
         <div class="d-flex-between gap-2 flex-wrap mb-2">
             <span class="c-dark ff-d">{{ $t('order.card.orderNum') }} : #{{ order.order_num }}</span>
-            <!-- <NuxtLink :to="{ name: 'orderDetailes', params: { 'id': order.id } }"
+            <NuxtLink :to="`/orderDetails/${order.id}`"
                 class="c-main text-decoration-underline">
                 {{ $t('moreBtn.detailes') }}
-            </NuxtLink> -->
+            </NuxtLink>
         </div>
 
         <div class="d-flex-between gap-2 flex-wrap mb-2">
