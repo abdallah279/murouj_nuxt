@@ -102,6 +102,12 @@ let showPaginate = computed(() => {
 onMounted(async () => {
     await getData();
 });
+
+/******************* Required Auth *******************/
+definePageMeta({
+  middleware: 'auth'
+});
+
 </script>
 
 <style lang="scss"></style>

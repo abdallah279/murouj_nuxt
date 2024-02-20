@@ -129,7 +129,12 @@ const loyaltyToBalance = async () => {
 /******************* Mounted *******************/
 onMounted(async () => {
     await pointsData();
-})
+});
+
+/******************* Required Auth *******************/
+definePageMeta({
+  middleware: 'auth'
+});
 
 </script>
 

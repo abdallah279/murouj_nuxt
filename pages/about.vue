@@ -27,7 +27,14 @@ const { response } = responseApi();
 // Axios
 const axios = useApi();
 
-/******************* DATA *******************/
+// pinia store
+import { useGlobalStore } from '~/stores/global';
+
+/*************** DATA *****************/
+
+// Global Store
+const globalStore = useGlobalStore();
+const { countryLocal, countryID } = storeToRefs(globalStore);
 
 // about
 const about = ref(``);
@@ -52,22 +59,19 @@ const getAbout = async () => {
 }
 
 /******************* Computed *******************/
-// countryID 
-const countryID = computed(() => {
-    return '1'
-    // return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
-});
 
 /******************* Watch *******************/
+
+watch(countryLocal, async (newVal) => {
+  if (newVal) {
+    await getAbout();
+  }
+});
 
 /******************* Mounted *******************/
 onMounted(async () => {
     await getAbout();
 });
-
-definePageMeta({
-  middleware: 'auth'
-})
 
 </script>
 

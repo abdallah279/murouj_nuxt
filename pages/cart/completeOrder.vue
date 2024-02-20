@@ -332,8 +332,13 @@ const axios = useApi();
 
 // pinia store
 import { useAuthStore } from '~/stores/auth';
+import { useGlobalStore } from '~/stores/global';
 
-/*************** DATA **************** */
+/*************** DATA *****************/
+
+// Global Store
+const globalStore = useGlobalStore();
+const { countryLocal, countryID } = storeToRefs(globalStore);
 
 // Store
 const store = useAuthStore();
@@ -560,12 +565,6 @@ const checkCoupon = async () => {
 
 /******************* Computed *******************/
 
-// countryID 
-const countryID = computed(() => {
-    return '1'
-    // return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
-});
-
 /******************* Watch *******************/
 
 /******************* Mounted *******************/
@@ -575,6 +574,11 @@ onMounted(async () => {
     await getCities();
     await getDeliveryTypes();
     await getBanks();
+});
+
+/******************* Required Auth *******************/
+definePageMeta({
+  middleware: 'auth'
 });
 
 </script>

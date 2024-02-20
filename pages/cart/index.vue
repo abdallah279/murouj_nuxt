@@ -193,9 +193,10 @@ onMounted(async () => {
     await getCart(true);
 });
 
+/******************* Required Auth *******************/
 definePageMeta({
   middleware: 'auth'
-})
+});
 
 </script>
 

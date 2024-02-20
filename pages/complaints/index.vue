@@ -85,6 +85,12 @@ const getComplaints = async () => {
 onMounted(async () => {
     await getComplaints();
 });
+
+/******************* Required Auth *******************/
+definePageMeta({
+  middleware: 'auth'
+});
+
 </script>
 
 <style lang="scss"></style>

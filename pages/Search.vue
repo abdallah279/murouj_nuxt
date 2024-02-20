@@ -33,8 +33,13 @@ const axios = useApi();
 
 // pinia store
 import { useAuthStore } from '~/stores/auth';
+import { useGlobalStore } from '~/stores/global';
 
-/******************* Data *******************/
+/*************** DATA *****************/
+
+// Global Store
+const globalStore = useGlobalStore();
+const { countryLocal, countryID } = storeToRefs(globalStore);
 
 // Store
 const store = useAuthStore();
@@ -85,7 +90,6 @@ const onPaginate = (e) => {
 
 /******************* Computed *******************/
 const searchText = computed(() => {
-    // return route.params.text;
     return route.query.text;
 });
 
@@ -99,16 +103,16 @@ let showPaginate = computed(() => {
     return totalPage.value > pageLimit.value
 });
 
-// countryID 
-const countryID = computed(() => {
-    return '1'
-    // return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
-});
-
 /******************* Watch *******************/
 watch(route, async () => {
     await searchFunc();
-})
+});
+
+watch(countryLocal, async (newVal) => {
+  if (newVal) {
+    await searchFunc();
+  }
+});
 
 /******************* Mounted *******************/
 onMounted(async () => {

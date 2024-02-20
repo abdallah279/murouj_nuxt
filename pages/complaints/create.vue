@@ -277,7 +277,12 @@ const addComplaints = async () => {
 /******************* Mounted *******************/
 onMounted(async ()=>{
     await getCountries();
-})
+});
+
+/******************* Required Auth *******************/
+definePageMeta({
+  middleware: 'auth'
+});
 
 </script>
 

@@ -28,7 +28,14 @@ const { response } = responseApi();
 // Axios
 const axios = useApi();
 
-/******************* Data *******************/
+// pinia store
+import { useGlobalStore } from '~/stores/global';
+
+/*************** DATA *****************/
+
+// Global Store
+const globalStore = useGlobalStore();
+const { countryLocal, countryID } = storeToRefs(globalStore);
 
 // terms
 const terms = ref(``);
@@ -53,13 +60,14 @@ const getData = async () => {
 }
 
 /******************* Computed *******************/
-// countryID 
-const countryID = computed(() => {
-    return '1'
-    // return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
-});
 
 /******************* Watch *******************/
+
+watch(countryLocal, async (newVal) => {
+  if (newVal) {
+    await getData();
+  }
+});
 
 /******************* Mounted *******************/
 onMounted(async () => {

@@ -256,7 +256,12 @@ const withdrawalRequest = async () => {
 /******************* Mounted *******************/
 onMounted(async () => {
     await walletData();
-})
+});
+
+/******************* Required Auth *******************/
+definePageMeta({
+  middleware: 'auth'
+});
 
 </script>
 
