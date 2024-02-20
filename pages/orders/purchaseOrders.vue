@@ -19,6 +19,10 @@
 </template>
 
 <script setup>
+
+/******************* Redirect To Waiting Page *******************/
+navigateTo("/orders/purchaseOrders/waiting");
+
 /******************* Import *******************/
 
 /******************* Data *******************/
