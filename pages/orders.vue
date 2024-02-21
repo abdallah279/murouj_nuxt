@@ -43,6 +43,11 @@ navigateTo("/orders/purchaseOrders");
 
 /******************* Mounted *******************/
 
+/******************* Required Auth *******************/
+definePageMeta({
+  middleware: 'auth'
+});
+
 </script>
 
 <style lang="scss"></style>

@@ -10,39 +10,11 @@
                         <div class="col-lg-6">
                             <form ref="confirmForm" action="" @submit.prevent="confirmOrder" id="confirmOrder">
 
-                                <!-- <div class="input-g">
-                                    <div class="main-input">
-
-                                        <Dropdown v-model="country" @change="getCities"
-                                            :placeholder="$t('createAccountForm.country.placeholder')" :options="countries"
-                                            optionLabel="name" class="input-me">
-                                            <template #value="slotProps">
-                                                <div v-if="slotProps.value" class="selected">
-                                                    <div>{{ slotProps.value.name }}</div>
-                                                </div>
-                                                <span v-else>
-                                                    {{ slotProps.placeholder }}
-                                                </span>
-                                            </template>
-                                            <template #option="slotProps">
-                                                <div class="option">
-                                                    <div>
-                                                        {{ slotProps.option.name }}
-                                                    </div>
-                                                </div>
-                                            </template>
-                                        </Dropdown>
-
-                                        <i class="pi pi-angle-down main-icon"></i>
-
-                                    </div>
-                                </div> -->
-
                                 <div class="input-g">
                                     <div class="main-input">
 
                                         <Dropdown v-model="city" :placeholder="$t('createAccountForm.city.placeholder')"
-                                            :options="cities" optionLabel="name" class="input-me">
+                                            :options="cities" optionLabel="name" class="input-me" @change="getDeliveryTypes(city.id)">
                                             <template #value="slotProps">
                                                 <div v-if="slotProps.value" class="selected">
                                                     {{ slotProps.value.name }}
@@ -338,7 +310,7 @@ import { useGlobalStore } from '~/stores/global';
 
 // Global Store
 const globalStore = useGlobalStore();
-const { countryLocal, countryID } = storeToRefs(globalStore);
+const { countryLocal, cityLocal, countryID, cartChanged } = storeToRefs(globalStore);
 
 // Store
 const store = useAuthStore();
@@ -493,6 +465,7 @@ const confirmOrder = async () => {
     await axios.post('orders', fd, config).then(res => {
         if (response(res) == "success") {
             order_id.value = res.data.data.order_id;
+            cartChanged.value += 1;
             done.value = true;
         } else {
             errorToast(res.data.msg);
@@ -503,8 +476,8 @@ const confirmOrder = async () => {
 }
 
 // get Delivery Types
-const getDeliveryTypes = async () => {
-    await axios.get(`delivery-types`, config).then(res => {
+const getDeliveryTypes = async (cityId) => {
+    await axios.get(`delivery-types?city_id=${cityId}`, config).then(res => {
         if (response(res) == "success") {
             deliveryTypes.value = res.data.data.types;
             summary.value = res.data.data.cart_summary;
@@ -566,13 +539,18 @@ const checkCoupon = async () => {
 /******************* Computed *******************/
 
 /******************* Watch *******************/
+watch(countryID, async (newVal) => {
+    if (newVal) {
+        await getCities();
+    }
+});
 
 /******************* Mounted *******************/
 onMounted(async () => {
     // await getSummary();
     await getCountries();
     await getCities();
-    await getDeliveryTypes();
+    await getDeliveryTypes(cityLocal.value.id);
     await getBanks();
 });
 

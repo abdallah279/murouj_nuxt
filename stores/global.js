@@ -1,12 +1,9 @@
 import { defineStore } from "pinia";
 
-// i18n
-// import { useI18n } from 'vue-i18n';
-
-// const { locale, t } = useI18n({ useScope: 'global' });
 
 export const useGlobalStore = defineStore("global", {
   state: () => ({
+    lang: "ar",
     shippingCount: 0,
     countryLocal: {
       id: null,
@@ -18,6 +15,7 @@ export const useGlobalStore = defineStore("global", {
     },
     countryChanged: false,
     countryID: 1,
+    cartChanged: 0,
   }),
   actions: {},
   persist: {

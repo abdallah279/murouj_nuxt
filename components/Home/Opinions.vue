@@ -53,6 +53,8 @@
 <script setup>
 
 /******************* Import *******************/
+import { CarouselCard, CarouselCardItem } from 'vue-carousel-card'
+import 'vue-carousel-card/styles/index.css';
 
 // success response
 const { response } = responseApi();

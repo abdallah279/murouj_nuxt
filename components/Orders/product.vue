@@ -97,8 +97,13 @@ const axios = useApi();
 
 // pinia store
 import { useAuthStore } from '~/stores/auth';
+import { useGlobalStore } from '~/stores/global';
 
-/*************** DATA **************** */
+/*************** DATA *****************/
+
+// Global Store
+const globalStore = useGlobalStore();
+const { cartChanged } = storeToRefs(globalStore);
 
 // Store
 const store = useAuthStore();
@@ -166,6 +171,7 @@ const addToCart = async (calc) => {
         if (response(res) == "success") {
             successToast(toastMesg);
             emit('updateProduct');
+            cartChanged.value += 1;
         } else {
             errorToast(res.data.msg);
             if (calc == 'plus') {
@@ -190,6 +196,7 @@ const deleteFromCart = async () => {
         if (response(res) == "success") {
             successToast(t("products.removedFromCart"));
             emit('updateProduct');
+            cartChanged.value -= 1;
         } else {
             errorToast(res.data.msg);
         }

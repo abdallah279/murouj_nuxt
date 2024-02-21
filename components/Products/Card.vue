@@ -44,12 +44,16 @@ const axios = useApi();
 
 // pinia store
 import { useAuthStore } from '~/stores/auth';
+import { useGlobalStore } from '~/stores/global';
 
-/******************* Data *******************/
+/*************** DATA *****************/
 
 // Store
 const store = useAuthStore();
+const globalStore = useGlobalStore();
+
 const { token } = storeToRefs(store);
+const { cartChanged } = storeToRefs(globalStore);
 
 // Fav
 const fav = ref(0);
@@ -122,6 +126,7 @@ const addToCart = async () => {
     await axios.post(`carts`, fd, config).then(res => {
         if (response(res) == "success") {
             successToast(t("products.addedToCart"));
+            cartChanged.value += 1;
         } else {
             errorToast(res.data.msg);
         }
@@ -133,6 +138,7 @@ const addToCart = async () => {
 }
 
 /******************* Computed *******************/
+
 const productId = computed(() => {
     return props.product.offer_id ? props.product.offer_id : props.product.product_id ? props.product.product_id : props.product.id
 });
@@ -143,6 +149,7 @@ const productId = computed(() => {
 onMounted(() => {
     fav.value = props.product.is_favourite;
 });
+
 </script>
 
 <style></style>

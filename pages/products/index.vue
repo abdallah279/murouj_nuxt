@@ -61,7 +61,7 @@ provide('view', true);
 // getData
 const getData = async () => {
     loading.value = true;
-    await axios.get(`our-products?country_id=${countryID.value}?page=${currentPage.value}`, config.value).then(res => {
+    await axios.get(`our-products?country_id=${countryID.value}&page=${currentPage.value}`, config.value).then(res => {
         if (response(res) == "success") {
             products.value = res.data.data.data;
             totalPage.value = res.data.data.pagination.total_items;

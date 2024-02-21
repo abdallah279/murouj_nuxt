@@ -154,7 +154,8 @@
 
                     <NuxtLink to="/cart" class="nav_btn">
                         <i class="pi pi-shopping-cart"></i>
-                        <span class="text">{{ $t('nav.cart') }} - {{ cartTotal }} {{ currency }}</span>
+                        <span class="text">{{ $t('nav.cart') }} <span v-if="cartTotal">- {{ cartTotal }}</span> {{ currency
+                        }}</span>
                         <span class="count" v-if="cartCount">{{ cartCount }}</span>
                     </NuxtLink>
 
@@ -393,7 +394,7 @@ const globalStore = useGlobalStore();
 
 const { logoutHandler } = store;
 const { user, isLoggedIn, token } = storeToRefs(store);
-const { shippingCount, cityLocal, countryLocal, countryChanged, countryID } = storeToRefs(globalStore);
+const { shippingCount, cityLocal, countryLocal, countryChanged, countryID, cartChanged, lang } = storeToRefs(globalStore);
 
 // Router
 const router = useRouter();
@@ -410,7 +411,7 @@ const searchForm = ref(null);
 const searchText = ref('');
 
 // Cart
-const cartTotal = ref(0);
+const cartTotal = ref(null);
 const cartCount = ref(0);
 
 // currency
@@ -463,7 +464,7 @@ const getCountries = async (getCity = false) => {
         if (response(res) == "success") {
             countries.value = res.data.data;
 
-            if(countryChanged.value == false && getCity){
+            if (countryChanged.value == false && getCity) {
                 countryLocal.value = res.data.data[0];
                 getCities(res.data.data[0].id);
                 countryID.value = res.data.data[0].id;
@@ -478,7 +479,7 @@ const getCities = async (countryId = countryChecked.value) => {
         if (response(res) == "success") {
             cities.value = res.data.data;
 
-            if(countryChanged.value == false){
+            if (countryChanged.value == false) {
                 cityLocal.value = res.data.data[0];
             }
         }
@@ -567,19 +568,13 @@ const getCountryAndCity = (countryId = countryLocal.value.id, cityId = cityLocal
     cityChecked.value = cityId;
 }
 
-// getLocal
-function getLocal() {
-    const localLang = localStorage.getItem("lang");
-    if (localLang) {
-        locale.value = localLang;
-        document.querySelector("html").setAttribute("lang", localLang);
-    }
-}
-
 // toggleLang
-function toggleLang(lang) {
-    localStorage.setItem("lang", lang);
-    window.location.reload();
+function toggleLang(newLang) {
+    lang.value = newLang;
+    if (lang.value) {
+        locale.value = lang.value;
+        document.querySelector("html").setAttribute("lang", lang.value);
+    }
 }
 
 // logout
@@ -630,6 +625,7 @@ watch(route, (newVal) => {
     // newVal.name == 'notifications' ? notCount.value = 0 : '';
 });
 
+// watch token To Get The New User Data
 watch(token, async (newVal) => {
     if (newVal) {
         config = {
@@ -653,12 +649,20 @@ watch(token, async (newVal) => {
     }
 });
 
-/*************** Mounted **************** */
+// watch country To Change V-Model in City And Country Modal
+watch(countryLocal, async (newVal) => {
+    getCountryAndCity();
+});
 
-onMounted(async () => {
-    getLocal();
+// watch cartChanged To Get The new Data IN Cart
+watch(cartChanged, async () => {
+    await getCartCount();
+});
+
+watch(lang, async (newVal) => {
     await getCountries(true);
 
+    // If User Logged In
     if (isLoggedIn.value) {
         await getCartCount();
         await getNotificationsCount();
@@ -667,7 +671,30 @@ onMounted(async () => {
             await getCities(user.value.country_id);
             getCountryAndCity(user.value.country_id, user.value.city_id);
             saveLocation(user.value.country_id, user.value.city_id);
-        } else{
+        } else {
+            getCountryAndCity();
+        }
+    } else {
+        getCountryAndCity();
+    }
+});
+
+/*************** Mounted **************** */
+
+onMounted(async () => {
+    toggleLang(lang.value);
+    await getCountries(true);
+
+    // If User Logged In
+    if (isLoggedIn.value) {
+        await getCartCount();
+        await getNotificationsCount();
+
+        if (countryChanged.value == false) {
+            await getCities(user.value.country_id);
+            getCountryAndCity(user.value.country_id, user.value.city_id);
+            saveLocation(user.value.country_id, user.value.city_id);
+        } else {
             getCountryAndCity();
         }
     } else {
@@ -675,6 +702,7 @@ onMounted(async () => {
     }
 
 });
+
 </script>
 
 <style lang="scss" scoped></style>

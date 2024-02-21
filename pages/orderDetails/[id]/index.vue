@@ -324,20 +324,20 @@
                                 @click="cancelModal = true">
                                 {{ $t('orderDetailes.buttons.cancel') }}
                             </button>
-                            <button type="button" class="main-btn up lg" v-if="order.status === 12" @click="receivedFunc">
+                            <!-- <button type="button" class="main-btn up lg" v-if="order.status === 12" @click="receivedFunc">
                                 {{ $t('orderDetailes.buttons.received') }}
                                 <span class="spinner-border spinner-border-sm" v-if="loadingImg" role="status"
                                     aria-hidden="true"></span>
-                            </button>
+                            </button> -->
                         </div>
 
                         <div class="buttons mt-4 justify-content-center" v-if="order.status === 14 && order.type === 0">
-                            <NuxtLink :to="{ name: 'returnOrder', params: { 'id': orderId } }"
+                            <NuxtLink :to="`/orderDetails/${orderId}/return`"
                                 v-if="order.can_retrieve && checkReturnedQuantity()" type="button"
                                 class="main-btn transparent lg">
                                 {{ $t('orderDetailes.buttons.returnProducts') }}
                             </NuxtLink>
-                            <NuxtLink :to="{ name: 'rateOrder', params: { 'id': orderId } }" type="button"
+                            <NuxtLink :to="`/orderDetails/${orderId}/rate`" type="button"
                                 class="main-btn up lg">
                                 {{ $t('orderDetailes.buttons.addRate') }}
                             </NuxtLink>
@@ -438,7 +438,7 @@
 </template>
 
 <script setup>
-/******************* Import *******************/
+/******************* Plugins *******************/
 
 // success response
 const { response } = responseApi();

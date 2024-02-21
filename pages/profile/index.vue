@@ -169,7 +169,8 @@
                             {{ $t('modals.deleteAccount.returnBtn') }}
                         </button>
 
-                        <button type="button" @click="deleteAccount" class="main-btn modal_btn light" :disabled="loadingDelete">
+                        <button type="button" @click="deleteAccount" class="main-btn modal_btn light"
+                            :disabled="loadingDelete">
                             <span v-if="!loadingDelete">
                                 {{ $t('modals.deleteAccount.deleteBtn') }}
                             </span>
@@ -262,13 +263,17 @@ const axios = useApi();
 
 // pinia store
 import { useAuthStore } from '~/stores/auth';
+import { useGlobalStore } from '~/stores/global';
 
 /******************* Data *******************/
 
 // Store
 const store = useAuthStore();
+const globalStore = useGlobalStore();
+
 const { profileHandler, deleteAccountHandler } = store;
 const { token } = storeToRefs(store);
+const { shippingCount, cityLocal, countryLocal, countryChanged, countryID } = storeToRefs(globalStore);
 
 import proImage from "@/assets/imgs/profile.png";
 
@@ -390,19 +395,11 @@ const getCities = async () => {
 }
 
 // saveLocation
-// const saveLocation = (country, city) => {
-//     for (let i = 0; i < countries.value.length; i++) {
-//         if (countries.value[i].id == country) {
-//             localStorage.setItem('country', JSON.stringify(countries.value[i]));
-//         }
-//     }
-
-//     for (let i = 0; i < cities.value.length; i++) {
-//         if (cities.value[i].id == city) {
-//             localStorage.setItem('city', JSON.stringify(cities.value[i]));
-//         }
-//     }
-// }
+const saveLocation = (country, city) => {
+    countryLocal.value = country;
+    countryID.value = country.id;
+    cityLocal.value = city;
+}
 
 // profile Function
 const profile = async () => {
@@ -422,13 +419,22 @@ const editAccount = async () => {
     const fd = new FormData(editAccountForm.value);
     fd.append('country_code', selectedCountry.value.key);
     fd.append('country_id', country.value.id);
-    fd.append('city_id', city.value.id);
+
+    if (city.value) {
+        fd.append('city_id', city.value.id);
+    }
 
     loading.value = true;
 
     // Get Returned Data From Store
     const res = await profileHandler(fd);
-    res.status == "success" ? successToast(res.msg) : errorToast(res.msg);
+
+    if (res.status == "success") {
+        successToast(res.msg);
+        saveLocation(country.value, city.value);
+    } else {
+        errorToast(res.msg);
+    }
 
     loading.value = false;
 

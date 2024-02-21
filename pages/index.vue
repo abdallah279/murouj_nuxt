@@ -27,7 +27,7 @@
     <HomeAdvantages />
 
     <!-- Customers Opinions -->
-    <!-- <HomeOpinions /> -->
+    <HomeOpinions />
 
   </main>
 
@@ -35,6 +35,7 @@
   <Dialog id="alert" class="xl alert_modal" v-model:visible="alertModal" modal>
     <img src="@/assets/imgs/alert_img.png" alt="" class="alert_img">
   </Dialog>
+
 </template>
 
 <script setup>

@@ -7,7 +7,9 @@
                     <i class="pi pi-clock"></i>
                     {{ notItem.created_at }}
                 </div>
-                <p class="mt-2 c-black fs13 ff-d">{{ notItem.body }}</p>
+                <p class="mt-2 c-black fs13 ff-d" @click="openNotification" :class="{ 'cu-pointer': notItem.data.order_num }">
+                    {{ notItem.body }}
+                </p>
             </div>
         </div>
         <button class="delete_btn" @click="deleteNotification">
@@ -63,17 +65,26 @@ const props = defineProps({
 // Get notifications
 const deleteNotification = async () => {
     deleteLoading.value = true;
-    await axios.delete(`delete-notification/${props.notItem.id}`, config).then(res => {
-        if (response(res) == "success") {
+    try {
+        const res = await axios.delete(`delete-notification/${props.notItem.id}`, config);
+        if (res.data.response === "success") {
             successToast(res.data.msg);
             emit('removeNotId', props.notItem.id);
         } else {
             errorToast(res.data.msg);
         }
-        deleteLoading.value = false;
-    }).catch(err => {
+    } catch (err) {
         console.error(err);
-    });
+    } finally {
+        deleteLoading.value = false;
+    }
+}
+
+// Open Notification
+const openNotification = () => {
+    if (props.notItem.data.order_num) {
+        navigateTo(`/orderDetails/${props.notItem.data.id}`);
+    }
 }
 
 /******************* Computed *******************/

@@ -20,15 +20,15 @@ export const useAuthStore = defineStore("auth", {
 
     // Sign In
     async signInHandler(formData) {
-      const resData = await axios.post("sign-in?count_notifications", formData);
-      if (response(resData) == "success") {
-        this.user = resData.data.data;
-        this.token = resData.data.data.token;
+      try {
+        const response = await axios.post("sign-in?count_notifications", formData);
+        this.user = response.data.data;
+        this.token = response.data.data.token;
         this.isLoggedIn = true;
         navigateTo("/");
-        return { status: "success", msg: resData.data.msg };
-      } else {
-        return { status: "error", msg: resData.data.msg };
+        return { status: "success", msg: response.data.msg };
+      } catch (error) {
+        return { status: "error", msg: error.response.data.msg };
       }
     },
 
@@ -70,7 +70,6 @@ export const useAuthStore = defineStore("auth", {
       );
       if (response(resData) == "success") {
         this.user = resData.data.data;
-        // navigateTo("/");
         return { status: "success", msg: resData.data.msg };
       } else {
         return { status: "error", msg: resData.data.msg };

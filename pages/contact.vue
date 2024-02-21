@@ -56,7 +56,7 @@
                         <div class="input-g">
                             <div class="main-input">
                                 <textarea class="input-me text-area validInputs" valid="message" name="content"
-                                    v-model="message" :placeholder="$t('contactForm.message')">
+                                    :placeholder="$t('contactForm.message')">
                                 </textarea>
                             </div>
                         </div>
@@ -215,7 +215,7 @@ const contactUs = async () => {
 /******************* Mounted *******************/
 onMounted(async () => {
     await getCountries();
-})
+});
 
 </script>
 

@@ -1,7 +1,10 @@
 import { useToast } from "primevue/usetoast";
 
 export default function toastMsg() {
-  const toast = useToast();
+  const nuxtApp = useNuxtApp();
+  const getToast = () => nuxtApp.vueApp.config.globalProperties.$toast;
+
+  const toast = getToast();
 
   // successToast
   const successToast = (msg) => {

@@ -29,7 +29,7 @@
                                     {{ $t('products.available') }}
                                 </div>
                                 <div class="text mb-2 ff-d fs16 c-black">{{ product.name }}</div>
-                                <div class="d-flex align-items-center mb-2 gap-3 c-dark3 cu-pointer"
+                                <div class="d-flex align-items-center mb-2 gap-3 c-dark3 cu-pointer w-fit"
                                     @click="rateModal = true">
                                     <Rating v-model="product.avg_rate" class="small gap-1 cu-pointer" readonly
                                         :cancel="false" />
@@ -87,8 +87,8 @@
                                 </div>
 
                                 <div class="price_con">
-                                    <p class="price">{{ product.discount_price }} {{ $t('products.currency') }}</p>
-                                    <p class="price old">{{ product.price }} {{ $t('products.currency') }}</p>
+                                    <p class="price">{{ product.discount_price }} {{ product.currency }}</p>
+                                    <p class="price old">{{ product.price }} {{ product.currency }}</p>
                                 </div>
                             </div>
 
@@ -260,7 +260,7 @@ import { useGlobalStore } from '~/stores/global';
 
 // Global Store
 const globalStore = useGlobalStore();
-const { countryLocal, countryID } = storeToRefs(globalStore);
+const { countryLocal, countryID, cartChanged } = storeToRefs(globalStore);
 
 // Store
 const store = useAuthStore();
@@ -289,6 +289,7 @@ const product = ref({
     category_name: '',
     subcategory_name: '',
     is_available: false,
+    currency: '',
     name: '',
     avg_rate: 0,
     rates_count: '',
@@ -321,6 +322,7 @@ const getData = async () => {
             product.value.subcategory_name = res.data.data.subcategory_name;
             product.value.is_available = res.data.data.is_available;
             product.value.name = res.data.data.name;
+            product.value.currency = res.data.data.currency;
             product.value.avg_rate = res.data.data.avg_rate;
             product.value.rates_count = res.data.data.rates_count;
             product.value.calories = res.data.data.calories;
@@ -380,6 +382,7 @@ const addToCart = async () => {
     await axios.post(`carts`, fd, config.value).then(res => {
         if (response(res) == "success") {
             done.value = true;
+            cartChanged.value += 1;
         } else {
             errorToast(res.data.msg);
         }
