@@ -138,6 +138,12 @@ const classPassword = computed(() => ({
 /******************* Watch *******************/
 
 /******************* Mounted *******************/
+
+/******************* Required Auth *******************/
+definePageMeta({
+  middleware: 'auth'
+});
+
 </script>
 
 <style></style>

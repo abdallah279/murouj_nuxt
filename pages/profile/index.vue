@@ -491,7 +491,12 @@ onMounted(async () => {
     if (country.value.id) {
         await getCities();
     }
-})
+});
+
+/******************* Required Auth *******************/
+definePageMeta({
+  middleware: 'auth'
+});
 
 </script>
 

@@ -80,7 +80,7 @@
                                     <span class="plus btn-num" @click="quantity++">
                                         <i class="pi pi-plus"></i>
                                     </span>
-                                    <input type="text" :value="quantity" />
+                                    <input type="text" :value="quantity" min="1" disabled />
                                     <span class="minus btn-num" @click="quantity > 1 ? quantity-- : false">
                                         <i class="pi pi-minus"></i>
                                     </span>

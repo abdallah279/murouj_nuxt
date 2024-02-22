@@ -138,6 +138,12 @@ const resendCode = async () => {
 /******************* Watch *******************/
 
 /******************* Mounted *******************/
+
+/******************* Required Auth *******************/
+definePageMeta({
+  middleware: 'auth'
+});
+
 </script>
 
 <style></style>

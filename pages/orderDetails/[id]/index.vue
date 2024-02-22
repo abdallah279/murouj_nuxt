@@ -682,6 +682,11 @@ onMounted(async () => {
     await getReasons();
 });
 
+/******************* Required Auth *******************/
+definePageMeta({
+  middleware: 'auth'
+});
+
 </script>
 
 <style lang="scss"></style>

@@ -1,22 +1,22 @@
 // pinia store
 import { useAuthStore } from "~/stores/auth";
 
-// Store
-const store = useAuthStore();
-const { isLoggedIn } = storeToRefs(store);
-
-// Toast
-const { errorToast } = toastMsg();
-
-// Translate
-const nuxtApp = useNuxtApp();
-
-// get i18n t
-const t = nuxtApp.vueApp.config.globalProperties.$t;
-
 export default defineNuxtRouteMiddleware((to, from) => {
+
+  // Store
+  const store = useAuthStore();
+  const { isLoggedIn } = storeToRefs(store);
+
+  // Toast
+  const { errorToast } = toastMsg();
+
+  // get i18n t
+  const nuxtApp = useNuxtApp();
+  const t = nuxtApp.vueApp.config.globalProperties.$t;
+
   if (isLoggedIn.value === false && to.meta.middleware == "auth") {
-    errorToast(t('validation.requiresAuth'));
-    return abortNavigation("Insufficient permissions.");
+    errorToast(t("validation.requiresAuth"));
+    return nuxtApp.runWithContext(() => abortNavigation());
+    // return abortNavigation("");
   }
 });

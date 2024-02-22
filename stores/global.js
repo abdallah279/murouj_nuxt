@@ -3,7 +3,6 @@ import { defineStore } from "pinia";
 
 export const useGlobalStore = defineStore("global", {
   state: () => ({
-    lang: "ar",
     shippingCount: 0,
     countryLocal: {
       id: null,

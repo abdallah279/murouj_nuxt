@@ -14,7 +14,8 @@
                                     <div class="main-input">
 
                                         <Dropdown v-model="city" :placeholder="$t('createAccountForm.city.placeholder')"
-                                            :options="cities" optionLabel="name" class="input-me" @change="getDeliveryTypes(city.id)">
+                                            :options="cities" optionLabel="name" class="input-me"
+                                            @change="getDeliveryTypes(city.id)">
                                             <template #value="slotProps">
                                                 <div v-if="slotProps.value" class="selected">
                                                     {{ slotProps.value.name }}
@@ -281,7 +282,6 @@
             </div>
         </div>
     </Dialog>
-
 </template>
 
 <script setup>
@@ -442,6 +442,7 @@ const getCities = async () => {
     await axios.get(`country/${countryID.value}/cities`).then(res => {
         if (response(res) == "success") {
             cities.value = res.data.data;
+            city.value = cityLocal.value;
         }
     }).catch(err => console.log(err));
 }
@@ -500,21 +501,6 @@ const getBanks = async () => {
     });
 }
 
-// get Cart Summary
-// const getSummary = async () => {
-//     loading.value = true;
-//     await axios.get(`carts-summary?country_id=${countryID.value}&mac_address=11ww2s3e3`, config).then(res => {
-//         if (response(res) == "success") {
-//             summary.value = res.data.data;
-//         } else {
-//             errorToast(res.data.msg);
-//         }
-//         loading.value = false;
-//     }).catch(err => {
-//         console.error(err);
-//     });
-// }
-
 // check Coupon
 const checkCoupon = async () => {
     loadingCoupon.value = true;
@@ -539,15 +525,15 @@ const checkCoupon = async () => {
 /******************* Computed *******************/
 
 /******************* Watch *******************/
-watch(countryID, async (newVal) => {
+watch([countryID, cityLocal], async (newVal) => {
     if (newVal) {
         await getCities();
+        await getDeliveryTypes(cityLocal.value.id);
     }
 });
 
 /******************* Mounted *******************/
 onMounted(async () => {
-    // await getSummary();
     await getCountries();
     await getCities();
     await getDeliveryTypes(cityLocal.value.id);
@@ -556,7 +542,7 @@ onMounted(async () => {
 
 /******************* Required Auth *******************/
 definePageMeta({
-  middleware: 'auth'
+    middleware: 'auth'
 });
 
 </script>

@@ -568,13 +568,19 @@ const getCountryAndCity = (countryId = countryLocal.value.id, cityId = cityLocal
     cityChecked.value = cityId;
 }
 
-// toggleLang
-function toggleLang(newLang) {
-    lang.value = newLang;
-    if (lang.value) {
-        locale.value = lang.value;
-        document.querySelector("html").setAttribute("lang", lang.value);
+// getLocal
+function getLocal() {
+    const localLang = localStorage.getItem("lang");
+    if (localLang) {
+        locale.value = localLang;
+        document.querySelector("html").setAttribute("lang", localLang);
     }
+}
+
+// toggleLang
+function toggleLang(lang) {
+    localStorage.setItem("lang", lang);
+    window.location.reload();
 }
 
 // logout
@@ -659,30 +665,10 @@ watch(cartChanged, async () => {
     await getCartCount();
 });
 
-watch(lang, async (newVal) => {
-    await getCountries(true);
-
-    // If User Logged In
-    if (isLoggedIn.value) {
-        await getCartCount();
-        await getNotificationsCount();
-
-        if (countryChanged.value == false) {
-            await getCities(user.value.country_id);
-            getCountryAndCity(user.value.country_id, user.value.city_id);
-            saveLocation(user.value.country_id, user.value.city_id);
-        } else {
-            getCountryAndCity();
-        }
-    } else {
-        getCountryAndCity();
-    }
-});
-
 /*************** Mounted **************** */
 
 onMounted(async () => {
-    toggleLang(lang.value);
+    getLocal();
     await getCountries(true);
 
     // If User Logged In

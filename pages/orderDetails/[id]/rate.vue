@@ -78,8 +78,7 @@
                     <img src="@/assets/imgs/right_img.gif" alt="" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4">{{ responeMsg }}</p>
                     <div class="buttons justify-content-center">
-                        <NuxtLink :to="`/orderDetails/${orderId}`"
-                            class="main-btn modal_btn up">
+                        <NuxtLink :to="`/orderDetails/${orderId}`" class="main-btn modal_btn up">
                             {{ $t('modals.done.followBtn') }}
                         </NuxtLink>
                     </div>
@@ -170,7 +169,7 @@ const rateOrder = async () => {
     productsRates.value = [];
     for (let i = 0; i < orderProducts.value.length; i++) {
         productsRates.value.push({
-            'order_id': `${orderProducts.value[i].product_id}`,
+            'order_id': orderId.value,
             'product_id': `${orderProducts.value[i].product_id}`,
             "stars": `${productsStars.value['proRate' + i]}`,
             "comment": `${productsComments.value['proComment' + i]}`,
@@ -194,7 +193,6 @@ const rateOrder = async () => {
 
     }).catch(err => console.log(err));
 
-    console.log(productsRates.value);
 }
 
 /******************* Computed *******************/
@@ -207,6 +205,11 @@ const orderId = computed(() => {
 /******************* Mounted *******************/
 onMounted(async () => {
     await getOrderDetailes();
+});
+
+/******************* Required Auth *******************/
+definePageMeta({
+    middleware: 'auth'
 });
 
 </script>
