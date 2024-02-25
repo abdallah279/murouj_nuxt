@@ -24,7 +24,7 @@
                             </button>
                         </div>
                         <div class="col-lg-7">
-                            <img :src="pointsImg" class="wallet_img" alt="">
+                            <img  loading="lazy" :src="pointsImg" class="wallet_img" alt="image">
                         </div>
                     </div>
 

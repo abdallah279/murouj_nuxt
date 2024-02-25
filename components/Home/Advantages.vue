@@ -7,7 +7,7 @@
                 <div class="grid-4 grid-res2" v-if="advantages.length">
                     <div class="advantage_item" v-for="advantage in advantages" :key="advantage.id">
                         <div class="icon">
-                            <img :src="advantage.icon" alt="" class="ic">
+                            <img  loading="lazy" :src="advantage.icon" alt="image" class="ic">
                         </div>
                         <h4 class="adv_name">{{ advantage.name }}</h4>
                         <p class="adv_desc">{{ advantage.description }}</p>
@@ -15,7 +15,7 @@
                 </div>
 
                 <div class="no-data" v-else>
-                    <img src="@/assets/imgs/no_data.avif" alt="" class="no-data-img">
+                    <img  loading="lazy" src="@/assets/imgs/no_data.avif" alt="image" class="no-data-img">
                     <div class="no-data-text">{{ $t('noData.advantages') }}</div>
                 </div>
             </div>

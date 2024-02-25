@@ -78,7 +78,7 @@
                                         <label :for="`payment${i}`" class="payment-label">
 
                                             <div class="right">
-                                                <img :src="pay.icon" alt="" class="payment-img">
+                                                <img  loading="lazy" :src="pay.icon" alt="image" class="payment-img">
                                                 <div class="content">
                                                     <div class="name">{{ pay.name }}</div>
                                                     <div class="text">{{ pay.desc }}</div>
@@ -154,7 +154,7 @@
                                                     class="main-icon selectedCountry">
                                                     <template #value="slotProps">
                                                         <div v-if="slotProps.value" class="selected">
-                                                            <img v-if="slotProps.value.image" :alt="slotProps.value.label"
+                                                            <img  loading="lazy" v-if="slotProps.value.image" :alt="slotProps.value.label"
                                                                 :src="slotProps.value.image" class="option-img" />
                                                             <div>{{ slotProps.value.key }}</div>
                                                             <i class="pi pi-angle-down ic"></i>
@@ -165,7 +165,7 @@
                                                     </template>
                                                     <template #option="slotProps">
                                                         <div class="option">
-                                                            <img v-if="slotProps.option.image"
+                                                            <img  loading="lazy" v-if="slotProps.option.image"
                                                                 :alt="slotProps.option.number" class="option-img"
                                                                 :src="slotProps.option.image" />
                                                             <div>
@@ -270,7 +270,7 @@
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <div class="right_sec">
-                    <img src="@/assets/imgs/right_img.gif" alt="" class="right_img mx-auto">
+                    <img  loading="lazy" src="@/assets/imgs/right_img.gif" alt="image" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4">{{ $t('modals.done.orderDone') }}</p>
                     <div class="buttons justify-content-center">
                         <NuxtLink to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>

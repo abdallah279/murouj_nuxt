@@ -9,7 +9,7 @@
 
                 <NuxtLink to="/categories" class="category_item">
                     <div class="category_img">
-                        <img src="@/assets/imgs/favicon.png" alt="" class="category_img sm">
+                        <img  loading="lazy" src="@/assets/imgs/favicon.png" alt="image" class="category_img sm">
                     </div>
                     <h5 class="category_name">{{ $t('moreBtn.more') }}</h5>
                 </NuxtLink>

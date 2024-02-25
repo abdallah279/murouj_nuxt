@@ -1,6 +1,6 @@
 <template>
     <div class="product_card offer">
-        <img :src="offer.image" alt="" class="product_img">
+        <img  loading="lazy" :src="offer.image" alt="image" class="product_img">
         <div class="product_body">
             <NuxtLink :to="`/products/${offer.product_id}`" class="product_name">
                 {{ offer.name }}

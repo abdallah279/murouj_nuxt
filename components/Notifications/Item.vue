@@ -1,7 +1,7 @@
 <template>
     <div class="not-item">
         <div class="right">
-            <img src="@/assets/imgs/favicon.png" alt="" class="logo">
+            <img  loading="lazy" src="@/assets/imgs/favicon.png" alt="image" class="logo">
             <div class="not_body">
                 <div class="time">
                     <i class="pi pi-clock"></i>

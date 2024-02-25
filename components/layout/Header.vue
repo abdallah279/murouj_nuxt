@@ -30,7 +30,7 @@
 
                     <div class="dropdown" v-if="isLoggedIn">
                         <button type="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img :src="user.image" alt="" class="profile_img">
+                            <img  loading="lazy" :src="user.image" alt="image" class="profile_img">
                             <span class="drop-text profile">{{ user.name }}</span>
                             <i class="pi pi-angle-down drop-ic"></i>
                         </button>
@@ -41,7 +41,7 @@
                                 <NuxtLink to="/profile" class="profile-item">
                                     <div class="rSec">
                                         <div class="profile-ic">
-                                            <img src="@/assets/imgs/icons/profile.png" alt="" class="ic">
+                                            <img  loading="lazy" src="@/assets/imgs/icons/profile.png" alt="image" class="ic">
                                         </div>
                                         <span class="profile-text">{{ $t('nav.profile.profile') }}</span>
                                     </div>
@@ -53,7 +53,7 @@
                                 <NuxtLink to="/financial" class="profile-item">
                                     <div class="rSec">
                                         <div class="profile-ic">
-                                            <img src="@/assets/imgs/icons/Financial.png" alt="" class="ic">
+                                            <img  loading="lazy" src="@/assets/imgs/icons/Financial.png" alt="image" class="ic">
                                         </div>
                                         <span class="profile-text">{{ $t('nav.profile.financial') }}</span>
                                     </div>
@@ -65,7 +65,7 @@
                                 <NuxtLink to="/complaints" class="profile-item">
                                     <div class="rSec">
                                         <div class="profile-ic">
-                                            <img src="@/assets/imgs/icons/complaint.png" alt="" class="ic">
+                                            <img  loading="lazy" src="@/assets/imgs/icons/complaint.png" alt="image" class="ic">
                                         </div>
                                         <span class="profile-text">{{ $t('nav.profile.complaints') }}</span>
                                     </div>
@@ -77,7 +77,7 @@
                                 <NuxtLink to="/about" class="profile-item">
                                     <div class="rSec">
                                         <div class="profile-ic">
-                                            <img src="@/assets/imgs/icons/terms.png" alt="" class="ic">
+                                            <img  loading="lazy" src="@/assets/imgs/icons/terms.png" alt="image" class="ic">
                                         </div>
                                         <span class="profile-text">{{ $t('nav.profile.about') }}</span>
                                     </div>
@@ -89,7 +89,7 @@
                                 <NuxtLink to="/privacy" class="profile-item">
                                     <div class="rSec">
                                         <div class="profile-ic">
-                                            <img src="@/assets/imgs/icons/about.png" alt="" class="ic">
+                                            <img  loading="lazy" src="@/assets/imgs/icons/about.png" alt="image" class="ic">
                                         </div>
                                         <span class="profile-text">{{ $t('nav.profile.privacy') }}</span>
                                     </div>
@@ -101,7 +101,7 @@
                                 <NuxtLink to="/faqs" class="profile-item">
                                     <div class="rSec">
                                         <div class="profile-ic">
-                                            <img src="@/assets/imgs/icons/faqs.png" alt="" class="ic">
+                                            <img  loading="lazy" src="@/assets/imgs/icons/faqs.png" alt="image" class="ic">
                                         </div>
                                         <span class="profile-text">{{ $t('nav.profile.faq') }}</span>
                                     </div>
@@ -113,7 +113,7 @@
                                 <NuxtLink to="/terms" class="profile-item">
                                     <div class="rSec">
                                         <div class="profile-ic">
-                                            <img src="@/assets/imgs/icons/terms.png" alt="" class="ic">
+                                            <img  loading="lazy" src="@/assets/imgs/icons/terms.png" alt="image" class="ic">
                                         </div>
                                         <span class="profile-text">{{ $t('nav.profile.terms') }}</span>
                                     </div>
@@ -125,7 +125,7 @@
                                 <button class="profile-item" @click="rateModal = true">
                                     <div class="rSec">
                                         <div class="profile-ic">
-                                            <img src="@/assets/imgs/icons/star.png" alt="" class="ic">
+                                            <img  loading="lazy" src="@/assets/imgs/icons/star.png" alt="image" class="ic">
                                         </div>
                                         <span class="profile-text">{{ $t('nav.profile.rate') }}</span>
                                     </div>
@@ -137,7 +137,7 @@
                                 <button class="profile-item red" @click="logout">
                                     <div class="rSec">
                                         <div class="profile-ic ">
-                                            <img src="@/assets/imgs/icons/logout.png" alt="" class="ic">
+                                            <img  loading="lazy" src="@/assets/imgs/icons/logout.png" alt="image" class="ic">
                                         </div>
                                         <span class="profile-text">{{ $t('nav.profile.logout') }}</span>
                                     </div>
@@ -178,12 +178,12 @@
             <div class="navbar-content">
 
                 <NuxtLink to="/" class="logo" aria-label="route to home">
-                    <img src="@/assets/imgs/logo.png" alt="" class="logo-img">
+                    <img  loading="lazy" src="@/assets/imgs/logo.png" alt="image" class="logo-img">
                 </NuxtLink>
 
                 <div class="links" :class="{ active: active }">
                     <NuxtLink to="/" class="logo">
-                        <img src="@/assets/imgs/logo.png" alt="logo">
+                        <img  loading="lazy" src="@/assets/imgs/logo.png" alt="logo">
                     </NuxtLink>
                     <NuxtLink to="/" class="link">{{ $t('nav.home') }}</NuxtLink>
                     <NuxtLink to="/orders" class="link">{{ $t('nav.orders') }}</NuxtLink>
@@ -220,7 +220,7 @@
         <div class="container">
             <div class="text-center fs13">
                 {{ $t('nav.shipping.text') }}
-                <img src="@/assets/imgs/icons/smile.png" alt="" class="ic">
+                <img  loading="lazy" src="@/assets/imgs/icons/smile.png" alt="image" class="ic">
                 {{ $t('nav.shipping.text2') }} {{ shippingCount }} {{ $t('nav.shipping.text3') }}
             </div>
         </div>
@@ -292,7 +292,7 @@
 
                 <div class="modal-form" v-else>
                     <div class="no-data sm">
-                        <img src="@/assets/imgs/no_data.avif" alt="" class="no-data-img">
+                        <img  loading="lazy" src="@/assets/imgs/no_data.avif" alt="image" class="no-data-img">
                         <div class="no-data-text">{{ $t('modals.city.noData') }}</div>
                     </div>
 
@@ -350,7 +350,7 @@
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <div class="right_sec">
-                    <img src="@/assets/imgs/right_img.gif" alt="" class="right_img mx-auto">
+                    <img  loading="lazy" src="@/assets/imgs/right_img.gif" alt="image" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4">{{ $t('modals.done.rateDone') }}</p>
                     <div class="buttons justify-content-center">
                         <NuxtLink to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>

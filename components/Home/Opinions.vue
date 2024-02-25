@@ -10,9 +10,9 @@
                         indicator-position="none" type="card">
                         <CarouselCardItem v-for="opinion in customerOpinions" :key="opinion.id" :name="`cc_${opinion.id}`">
                             <div class="customer_item">
-                                <img src="@/assets/imgs/icons/qoute.png" alt="" class="qoute qoute1">
-                                <img src="@/assets/imgs/icons/qoute.png" alt="" class="qoute qoute2">
-                                <img :src="opinion.user_image" alt="" class="img">
+                                <img  loading="lazy" src="@/assets/imgs/icons/qoute.png" alt="image" class="qoute qoute1">
+                                <img  loading="lazy" src="@/assets/imgs/icons/qoute.png" alt="image" class="qoute qoute2">
+                                <img  loading="lazy" :src="opinion.user_image" alt="image" class="img">
                                 <p class="text">{{ opinion.comment }}</p>
                             </div>
                         </CarouselCardItem>
@@ -25,7 +25,7 @@
 
                 <!--************ No Data ************-->
                 <div class="no-data" v-else>
-                    <img src="@/assets/imgs/no_data.avif" alt="" class="no-data-img">
+                    <img  loading="lazy" src="@/assets/imgs/no_data.avif" alt="image" class="no-data-img">
                     <div class="no-data-text">{{ $t('noData.comments') }}</div>
                 </div>
             </div>
@@ -35,8 +35,8 @@
                 indicator-position="none" type="card">
                 <CarouselCardItem v-for="i in 3" :key="i" :name="`cc_${i}`">
                     <div class="customer_item">
-                        <img src="@/assets/imgs/icons/qoute.png" alt="" class="qoute qoute1">
-                        <img src="@/assets/imgs/icons/qoute.png" alt="" class="qoute qoute2">
+                        <img  loading="lazy" src="@/assets/imgs/icons/qoute.png" alt="image" class="qoute qoute1">
+                        <img  loading="lazy" src="@/assets/imgs/icons/qoute.png" alt="image" class="qoute qoute2">
                         <Skeleton shape="circle" size="5rem"></Skeleton>
                         <Skeleton width="100%" height=".5rem"></Skeleton>
                         <Skeleton width="100%" height=".5rem"></Skeleton>

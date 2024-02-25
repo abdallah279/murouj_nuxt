@@ -1,6 +1,6 @@
 <template>
     <button @click="routeFunc" class="category_item" :class="{'active': item.active}">
-        <img :src="item.image" alt="" class="category_img">
+        <img  loading="lazy" :src="item.image" alt="image" class="category_img">
         <h5 class="category_name">{{ item.name }}</h5>
     </button>
 </template>

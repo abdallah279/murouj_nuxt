@@ -101,10 +101,10 @@
                         <h3 class="footer-head mb-4">{{ $t('footer.download') }}</h3>
                         <div class="footer-links">
                             <a :href="android_link" target="_blank"  class="link mb-3" aria-label="Android Link">
-                                <img src="@/assets/imgs/google.png" class="app-link" alt="">
+                                <img  loading="lazy" src="@/assets/imgs/google.png" class="app-link" alt="image">
                             </a>
                             <a :href="apple_link" target="_blank"  class="link mb-3" aria-label="Apple Link">
-                                <img src="@/assets/imgs/app.png" class="app-link" alt="">
+                                <img  loading="lazy" src="@/assets/imgs/app.png" class="app-link" alt="image">
                             </a>
                         </div>
                     </div>
@@ -118,13 +118,13 @@
         <div class="container">
             <div class="content">
                 <NuxtLink to="/" aria-label="route to home">
-                    <img src="@/assets/imgs/logo.png" class="logo" alt="">
+                    <img  loading="lazy" src="@/assets/imgs/logo.png" class="logo" alt="image">
                 </NuxtLink>
 
                 <div class="center">
                     <div class="social-icons mb-3 justify-content-center">
                         <a :href="social.link" :title="`${social.name} Link`" class="social-ic" target="_blank" v-for="social in socials" :key="social.id">
-                            <img :src="social.icon" class="ic" alt="" />
+                            <img  loading="lazy" :src="social.icon" class="ic" alt="image" />
                         </a>
                     </div>
 
@@ -132,7 +132,7 @@
                 </div>
 
                 <div class="buy_imgs">
-                    <img :src="img.icon" v-for="img in buy_imgs" :key="img.id" alt="" class="buy_img">
+                    <img  loading="lazy" :src="img.icon" v-for="img in buy_imgs" :key="img.id" alt="image" class="buy_img">
                 </div>
 
             </div>

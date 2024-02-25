@@ -228,7 +228,7 @@
                                     </label>
 
                                     <div class='hidden-img' v-for="(img, i) in images" :key="img.name">
-                                        <img src='' :class="`img${i}`" :alt="img.name" />
+                                        <img  loading="lazy" src='' :class="`img${i}`" :alt="img.name" />
 
                                         <span class='remove-img' @click="removeImage(i)">
                                             <i class="pi pi-times"></i>
@@ -301,7 +301,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-4">
-                                <img src="@/assets/imgs/favicon.png" alt=""
+                                <img  loading="lazy" src="@/assets/imgs/favicon.png" alt="image"
                                     class="login_logo opacity-75 sm res d-block mx-auto">
                             </div>
                         </div>
@@ -425,7 +425,7 @@
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <div class="right_sec">
-                    <img src="@/assets/imgs/right_img.gif" alt="" class="right_img mx-auto">
+                    <img  loading="lazy" src="@/assets/imgs/right_img.gif" alt="image" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4">{{ $t('modals.done.cancelDone') }}</p>
                     <div class="buttons justify-content-center">
                         <NuxtLink to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>

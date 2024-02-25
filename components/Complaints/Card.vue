@@ -1,6 +1,6 @@
 <template>
     <div class="complaint-item sec-border">
-        <img :src="complaint.image" class="complaint-img" title="complaint-img" alt="order-img">
+        <img  loading="lazy" :src="complaint.image" class="complaint-img" title="complaint-img" alt="order-img">
         <div class="left-sec">
 
             <div class="item">
@@ -20,7 +20,7 @@
                 <div class="left-item">
 
                     <div class="status d-flex align-items-center gap-2">
-                        <img src="@/assets/imgs/icons/complaint_ic.png" alt="" class="main_ic">
+                        <img  loading="lazy" src="@/assets/imgs/icons/complaint_ic.png" alt="image" class="main_ic">
                         <span class="c-blue ff-d fs13">
                             {{ $t('complaint.card.status') }} : {{ complaint.status }}
                         </span>

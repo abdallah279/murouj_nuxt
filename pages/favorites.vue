@@ -6,7 +6,7 @@
             <div v-if="!loading">
                 <ProductsCards @remove="removeProduct" :products="products" v-if="products.length" />
                 <div class="no-data" v-else>
-                    <img src="@/assets/imgs/no_data.avif" alt="" class="no-data-img">
+                    <img  loading="lazy" src="@/assets/imgs/no_data.avif" alt="image" class="no-data-img">
                     <div class="no-data-text">{{ $t('noData.products') }}</div>
                 </div>
             </div>

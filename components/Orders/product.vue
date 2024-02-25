@@ -5,7 +5,7 @@
 
             <!--**** Product Image ****-->
             <div class="p_img">
-                <img :src="product.image" alt="" class="img">
+                <img  loading="lazy" :src="product.image" alt="image" class="img">
             </div>
 
             <!--**** Product Name ****-->

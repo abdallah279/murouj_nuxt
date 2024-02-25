@@ -74,7 +74,7 @@
 
                 </div>
                 <div class="no-data" v-else>
-                    <img src="@/assets/imgs/no_data.avif" alt="" class="no-data-img">
+                    <img  loading="lazy" src="@/assets/imgs/no_data.avif" alt="image" class="no-data-img">
                     <div class="no-data-text">{{ $t('noData.subCategories') }}</div>
                 </div>
             </div>
@@ -101,7 +101,7 @@
             <div v-if="!loadingPro && !loading && categories.length">
                 <ProductsCards :products="products" v-if="products.length" class="mt-5" />
                 <div class="no-data mt-5" v-if="!products.length">
-                    <img src="@/assets/imgs/no_data.avif" alt="" class="no-data-img">
+                    <img  loading="lazy" src="@/assets/imgs/no_data.avif" alt="image" class="no-data-img">
                     <div class="no-data-text">{{ $t('noData.categoryProducts') }}</div>
                 </div>
             </div>

@@ -16,7 +16,7 @@
                                     class="main-icon selectedCountry">
                                     <template #value="slotProps">
                                         <div v-if="slotProps.value" class="selected">
-                                            <img v-if="slotProps.value.image" :alt="slotProps.value.label"
+                                            <img  loading="lazy" v-if="slotProps.value.image" :alt="slotProps.value.label"
                                                 :src="slotProps.value.image" class="option-img" />
                                             <div>{{ slotProps.value.key }}</div>
                                             <i class="pi pi-angle-down ic"></i>
@@ -27,7 +27,7 @@
                                     </template>
                                     <template #option="slotProps">
                                         <div class="option">
-                                            <img v-if="slotProps.option.image" :alt="slotProps.option.key"
+                                            <img  loading="lazy" v-if="slotProps.option.image" :alt="slotProps.option.key"
                                                 class="option-img" :src="slotProps.option.image" />
                                             <div>
                                                 {{ slotProps.option.key }}

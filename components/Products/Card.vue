@@ -6,7 +6,7 @@
             </span>
             <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
         </div>
-        <img :src="product.image" alt="" class="product_img">
+        <img  loading="lazy" :src="product.image" alt="image" class="product_img">
         <div class="product_body">
             <NuxtLink v-if="!view" :to="`/products/${productId}`" class="product_name">
                 <i class="pi pi-arrow-left c-main"></i>

@@ -204,7 +204,7 @@
                     </div>
 
                     <div class="no-data sm" v-else>
-                        <img src="@/assets/imgs/no_data.avif" alt="" class="no-data-img">
+                        <img  loading="lazy" src="@/assets/imgs/no_data.avif" alt="image" class="no-data-img">
                         <div class="no-data-text">{{ $t('noData.productRate') }}</div>
                     </div>
 
@@ -223,7 +223,7 @@
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <div class="right_sec">
-                    <img src="@/assets/imgs/right_img.gif" alt="" class="right_img mx-auto">
+                    <img  loading="lazy" src="@/assets/imgs/right_img.gif" alt="image" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4 ff-d">{{ $t('modals.done.addDone') }}</p>
                     <div class="buttons justify-content-center">
                         <NuxtLink to="/cart" class="main-btn modal_btn up">{{ $t('modals.done.orderBtn') }}</NuxtLink>

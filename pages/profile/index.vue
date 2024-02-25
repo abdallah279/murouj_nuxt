@@ -10,7 +10,7 @@
                     <div class="user-photo-con">
                         <div class="user-img">
                             <div class="profile-img">
-                                <img :src="image" class="img" alt="">
+                                <img  loading="lazy" :src="image" class="img" alt="image">
                             </div>
                             <input type="file" name="image" @change="uploadImage" id="profileImg" accept="image/*"
                                 class="hidden-input validInputs">
@@ -93,7 +93,7 @@
                                     class="main-icon selectedCountry">
                                     <template #value="slotProps">
                                         <div v-if="slotProps.value" class="selected">
-                                            <img v-if="slotProps.value.image" :alt="slotProps.value.label"
+                                            <img  loading="lazy" v-if="slotProps.value.image" :alt="slotProps.value.label"
                                                 :src="slotProps.value.image" class="option-img" />
                                             <div>{{ slotProps.value.key }}</div>
                                             <i class="pi pi-angle-down ic"></i>
@@ -104,7 +104,7 @@
                                     </template>
                                     <template #option="slotProps">
                                         <div class="option">
-                                            <img v-if="slotProps.option.image" :alt="slotProps.option.number"
+                                            <img  loading="lazy" v-if="slotProps.option.image" :alt="slotProps.option.number"
                                                 class="option-img" :src="slotProps.option.image" />
                                             <div>
                                                 {{ slotProps.option.key }}
@@ -150,7 +150,7 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <img src="@/assets/imgs/login_logo.png" alt="" class="login_logo res d-block mx-auto">
+                        <img  loading="lazy" src="@/assets/imgs/login_logo.png" alt="image" class="login_logo res d-block mx-auto">
                     </div>
                 </div>
             </form>
@@ -162,7 +162,7 @@
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <div class="right_sec">
-                    <img src="@/assets/imgs/delete.png" alt="" class="right_img mx-auto">
+                    <img  loading="lazy" src="@/assets/imgs/delete.png" alt="image" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4">{{ $t('modals.deleteAccount.text') }}</p>
                     <div class="buttons justify-content-center">
                         <button type="button" @click="deleteAcc = false" class="main-btn modal_btn up">
@@ -235,7 +235,7 @@
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <div class="right_sec">
-                    <img src="@/assets/imgs/right_img.gif" alt="" class="right_img mx-auto">
+                    <img  loading="lazy" src="@/assets/imgs/right_img.gif" alt="image" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4">{{ $t('modals.done.changePass') }}</p>
                     <div class="buttons justify-content-center">
                         <NuxtLink to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>
