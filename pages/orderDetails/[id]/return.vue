@@ -10,7 +10,8 @@
                     <!--*** سبب الارجاع ***-->
                     <div class="input-g">
                         <div class="main-input">
-                            <textarea v-model="retrieval_reason" valid="retrieval_reason" class="input-me validInputs text-area sm"
+                            <textarea v-model="retrieval_reason" valid="retrieval_reason"
+                                class="input-me validInputs text-area sm"
                                 :placeholder="$t('orderDetailes.reasonReturn')"></textarea>
                         </div>
                     </div>
@@ -44,7 +45,7 @@
                             </label>
 
                             <div class='hidden-img' v-for="(img, i) in images" :key="img.name">
-                                <img  loading="lazy" src='' :class="`img${i}`" :alt="img.name" />
+                                <img loading="lazy" src='' :class="`img${i}`" :alt="img.name" />
 
                                 <span class='remove-img' @click="removeImage(i)">
                                     <i class="pi pi-times"></i>
@@ -114,11 +115,11 @@
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <div class="right_sec">
-                    <img  loading="lazy" src="@/assets/imgs/right_img.gif" alt="image" class="right_img mx-auto">
+                    <img loading="lazy" src="@/assets/imgs/right_img.gif" alt="image" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4">{{ $t('modals.done.returnDone') }}</p>
                     <div class="buttons justify-content-center">
                         <NuxtLink to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>
-                        <NuxtLink to="/orders/purchaseOrders/waiting" class="main-btn modal_btn transparent">
+                        <NuxtLink :to="`/orderDetails/${orderId}`" class="main-btn modal_btn transparent">
                             {{ $t('modals.done.followBtn') }}
                         </NuxtLink>
                     </div>
@@ -126,6 +127,7 @@
             </div>
         </div>
     </Dialog>
+
 </template>
 
 <script setup>
@@ -298,7 +300,7 @@ const returnOrder = async () => {
     }
 
     const fd = new FormData();
-    
+
     fd.append('order_id', orderId.value);
     fd.append('retrieval_reason', retrieval_reason.value);
     // fd.append('delivery_type', delivery_type.value);
@@ -307,9 +309,9 @@ const returnOrder = async () => {
     for (let img of images.value) {
         fd.append('attachments[]', img);
     }
-    
+
     validate();
-    
+
     if (errors.value.length) {
         errorToast(errors.value[0]);
         loading.value = false;
@@ -343,7 +345,7 @@ onMounted(async () => {
 
 /******************* Required Auth *******************/
 definePageMeta({
-  middleware: 'auth'
+    middleware: 'auth'
 });
 
 </script>

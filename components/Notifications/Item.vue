@@ -67,7 +67,7 @@ const deleteNotification = async () => {
     deleteLoading.value = true;
     try {
         const res = await axios.delete(`delete-notification/${props.notItem.id}`, config);
-        if (res.data.response === "success") {
+        if (response(res) == "success") {
             successToast(res.data.msg);
             emit('removeNotId', props.notItem.id);
         } else {

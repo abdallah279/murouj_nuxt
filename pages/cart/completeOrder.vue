@@ -451,8 +451,6 @@ const getCities = async () => {
 const confirmOrder = async () => {
     loadingBtn.value = true;
     const fd = new FormData(confirmForm.value);
-    // fd.append('country_code', selectedCountry.value.key);
-    // fd.append('country_id', country.value.id);
     fd.append('country_id', countryID.value);
     fd.append('city_id', city.value.id);
     fd.append('lat', addressLat.value);
