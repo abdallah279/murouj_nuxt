@@ -60,7 +60,7 @@ import { useAuthStore } from '~/stores/auth';
 // Store
 const store = useAuthStore();
 const { verificationHandler } = store;
-const { user } = storeToRefs(store);
+const { user, notificationToken } = storeToRefs(store);
 
 const loading = ref(false);
 const otpInput = ref(null);
@@ -80,8 +80,8 @@ const verificationCode = async () => {
     fd.append('code', bindModal.value);
     fd.append('phone', user.value.phone);
     fd.append('country_code', user.value.country_code);
-    fd.append('device_id', 111);
-    // fd.append('device_id', localStorage.getItem('notificationToken'));
+    // fd.append('device_id', 111);
+    fd.append('device_id', notificationToken.value);
     fd.append('device_type', 'web');
 
     // Get Returned Data From Store

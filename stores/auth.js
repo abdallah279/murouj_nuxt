@@ -15,6 +15,7 @@ export const useAuthStore = defineStore("auth", {
     token: null,
     isLoggedIn: false,
     newPhone: null,
+    notificationToken: null,
   }),
   actions: {
 

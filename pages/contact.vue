@@ -55,9 +55,11 @@
 
                         <div class="input-g">
                             <div class="main-input">
-                                <textarea class="input-me text-area validInputs" valid="message" name="content"
-                                    :placeholder="$t('contactForm.message')">
-                                </textarea>
+                                <ClientOnly>
+                                    <textarea class="input-me text-area validInputs" v-model="content" valid="message" name="content"
+                                        :placeholder="$t('contactForm.message')">
+                                    </textarea>
+                                </ClientOnly>
                             </div>
                         </div>
 
@@ -131,8 +133,8 @@ const phone = ref('');
 // Title
 const title = ref('');
 
-// Mesage
-const message = ref('');
+// content
+const content = ref('');
 
 // Loading
 const loading = ref(false);

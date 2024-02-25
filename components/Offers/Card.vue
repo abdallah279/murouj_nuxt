@@ -34,7 +34,7 @@
 
 <script setup>
 
-/******************* Import *******************/
+/******************* Plugins *******************/
 // success response
 const { response } = responseApi();
 
