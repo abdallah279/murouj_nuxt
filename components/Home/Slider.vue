@@ -3,7 +3,7 @@
 
         <div v-if="!loading">
             <div v-if="slider.length">
-                <Carousel :value="slider" :numVisible="1" :numScroll="1" circular
+                <Carousel :value="slider" :numVisible="1" :showNavigators="false" :numScroll="1" circular
                     :autoplayInterval="3000" class="dir-slider">
                     <template #item="slotProps">
                         <img :src="slotProps.data.image" alt="slider-img" class="slider-img" />

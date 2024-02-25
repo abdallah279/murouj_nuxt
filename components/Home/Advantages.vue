@@ -9,7 +9,7 @@
                         <div class="icon">
                             <img :src="advantage.icon" alt="" class="ic">
                         </div>
-                        <h5 class="adv_name">{{ advantage.name }}</h5>
+                        <h4 class="adv_name">{{ advantage.name }}</h4>
                         <p class="adv_desc">{{ advantage.description }}</p>
                     </div>
                 </div>

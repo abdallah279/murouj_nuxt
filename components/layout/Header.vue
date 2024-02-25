@@ -177,7 +177,7 @@
         <div class="container">
             <div class="navbar-content">
 
-                <NuxtLink to="/" class="logo">
+                <NuxtLink to="/" class="logo" aria-label="route to home">
                     <img src="@/assets/imgs/logo.png" alt="" class="logo-img">
                 </NuxtLink>
 

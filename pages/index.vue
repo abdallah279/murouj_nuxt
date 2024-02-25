@@ -32,7 +32,7 @@
   </main>
 
   <!-- Alert Modal -->
-  <Dialog id="alert" class="xl alert_modal" v-model:visible="alertModal" modal>
+  <Dialog id="alert" class="xl alert_modal" aria-label="alert" v-model:visible="alertModal" modal>
     <img src="@/assets/imgs/alert_img.png" alt="" class="alert_img">
   </Dialog>
 

@@ -30,7 +30,7 @@
                             <i class="pi pi-map-marker"></i>
                         </div>
                         <div class="info">
-                            <h4 class="name">{{ $t('subscribeMail.contactItems.location') }}</h4>
+                            <h5 class="name">{{ $t('subscribeMail.contactItems.location') }}</h5>
                             <p class="text">{{ $t('subscribeMail.contactItems.address') }}</p>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                             <i class="pi pi-phone"></i>
                         </div>
                         <div class="info">
-                            <h4 class="name">{{ $t('subscribeMail.contactItems.phone') }}</h4>
+                            <h5 class="name">{{ $t('subscribeMail.contactItems.phone') }}</h5>
                             <a :href="`tel:${contact_data.phone}`" target="_blank" class="text">{{ contact_data.phone }}</a>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                             <i class="pi pi-envelope"></i>
                         </div>
                         <div class="info">
-                            <h4 class="name">{{ $t('subscribeMail.contactItems.mail') }}</h4>
+                            <h5 class="name">{{ $t('subscribeMail.contactItems.mail') }}</h5>
                             <a :href="`mailto:${contact_data.email}`" target="_blank" class="text">{{ contact_data.email
                             }}</a>
                         </div>
@@ -100,10 +100,10 @@
                     <div class="foot-content">
                         <h3 class="footer-head mb-4">{{ $t('footer.download') }}</h3>
                         <div class="footer-links">
-                            <a :href="android_link" target="_blank"  class="link mb-3">
+                            <a :href="android_link" target="_blank"  class="link mb-3" aria-label="Android Link">
                                 <img src="@/assets/imgs/google.png" class="app-link" alt="">
                             </a>
-                            <a :href="apple_link" target="_blank"  class="link mb-3">
+                            <a :href="apple_link" target="_blank"  class="link mb-3" aria-label="Apple Link">
                                 <img src="@/assets/imgs/app.png" class="app-link" alt="">
                             </a>
                         </div>
@@ -117,13 +117,13 @@
     <section class="copy_sec py-3">
         <div class="container">
             <div class="content">
-                <NuxtLink to="/">
+                <NuxtLink to="/" aria-label="route to home">
                     <img src="@/assets/imgs/logo.png" class="logo" alt="">
                 </NuxtLink>
 
                 <div class="center">
                     <div class="social-icons mb-3 justify-content-center">
-                        <a :href="social.link" class="social-ic" target="_blank" v-for="social in socials" :key="social.id">
+                        <a :href="social.link" :title="`${social.name} Link`" class="social-ic" target="_blank" v-for="social in socials" :key="social.id">
                             <img :src="social.icon" class="ic" alt="" />
                         </a>
                     </div>

@@ -17,8 +17,8 @@
                             </div>
                         </CarouselCardItem>
                         <div class="arrow_btns">
-                            <button @click="prev" class="arrow prev up"><font-awesome-icon :icon="['fas', 'right-long']" /></button>
-                            <button @click="next" class="arrow next up"><font-awesome-icon :icon="['fas', 'left-long']" /></button>
+                            <button @click="prev" class="arrow prev up" title="Prev Button"><font-awesome-icon :icon="['fas', 'right-long']" /></button>
+                            <button @click="next" class="arrow next up" title="Next Button"><font-awesome-icon :icon="['fas', 'left-long']" /></button>
                         </div>
                     </CarouselCard>
                 </div>
