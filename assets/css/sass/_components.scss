@@ -1343,7 +1343,7 @@
   font-size: 15px;
   color: $black;
   margin-bottom: 40px;
-  text-align: center;
+  // text-align: center;
   font-family: fontDemi;
 
   @media screen and (max-width: $screen-xs) {
@@ -1377,7 +1377,7 @@
   // font-size: 15px;
   color: $dark;
   margin-bottom: 25px;
-  text-align: center;
+  // text-align: center;
 }
 
 .form-head {
@@ -2518,6 +2518,29 @@
     background-color: $main;
     color: $white;
   }
+
+
+  &.radio_del {
+    .input-radio {
+      display: none;
+    }
+
+    .radio_box{
+      flex-shrink: 0;
+      width: 17px;
+      height: 17px;
+      border-radius: 2px;
+      display: block;
+      border: 3px solid $white;
+      outline: 1px solid $main;
+      background-color: $white;
+      position: relative;
+    }
+
+    .input-radio:checked + .radio_box {
+      background-color: $main;
+    }
+  }
 }
 
 // user-photo-con
@@ -3032,6 +3055,38 @@
   }
 }
 
+.GoogleMap{
+  position: relative;
+}
+
+.SearchArea{
+  background-color: $white;
+  border-radius: 0px;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  width: calc(100% - 120px);
+
+
+  .pac-target-input{
+    height: 42px;
+    margin-block: 10px;
+    font-size: 13px;
+    border-radius: 5px;
+    border: 1px solid $main;
+
+    &::placeholder{
+      color: $placholder-color;
+      font-size: 13px;
+    }
+  }
+}
+
+.pac-container{
+  z-index: 9000;
+}
 /********************* Prime Rating *********************/
 .p-rating {
   // justify-content: center;

@@ -119,7 +119,7 @@ import { useAuthStore } from '~/stores/auth';
 
 // Store
 const store = useAuthStore();
-const { token } = storeToRefs(store);
+const { token , notificationToken} = storeToRefs(store);
 
 // Form
 const contactForm = ref(null);
@@ -141,6 +141,9 @@ const loading = ref(false);
 
 // errors
 const errors = ref([]);
+
+// configContact
+const configContact = ref({});
 
 // Modal
 const done = ref(false);
@@ -192,12 +195,19 @@ const contactUs = async () => {
 
     validate();
 
+    if(!token.value){
+        fd.append('device_id', notificationToken.value);
+        fd.append('device_type', 'web');
+    } else{
+        configContact.value = config
+    }
+
     if (errors.value.length) {
         errorToast(errors.value[0]);
         loading.value = false;
         errors.value = [];
     } else {
-        await axios.post('contact-us', fd, config).then(res => {
+        await axios.post('contact-us', fd, configContact.value).then(res => {
             if (response(res) == "success") {
 
                 done.value = true

@@ -161,7 +161,6 @@ const login = async () => {
     const fd = new FormData(loginForm.value);
     fd.append('country_code', selectedCountry.value.key);
     fd.append('device_id', notificationToken.value);
-    // fd.append('device_id', 111);
     fd.append('device_type', 'web');
 
     validate();

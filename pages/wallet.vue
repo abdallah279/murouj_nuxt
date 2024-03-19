@@ -52,31 +52,31 @@
                 <form action="" ref="requestForm" class="modal-form" @submit.prevent="withdrawalRequest">
                     <div class="input-g">
                         <div class="main-input">
-                            <input type="text" class="input-me" name="bank_account_name"
+                            <input type="text" class="input-me validInputs" valid="bank_account_name" name="bank_account_name"
                                 :placeholder="$t('modals.bankAccount.form.name')" />
                         </div>
                     </div>
                     <div class="input-g">
                         <div class="main-input">
-                            <input type="text" class="input-me" name="bank_name"
+                            <input type="text" class="input-me validInputs" valid="bank_name" name="bank_name"
                                 :placeholder="$t('modals.bankAccount.form.bankName')" />
                         </div>
                     </div>
                     <div class="input-g">
                         <div class="main-input">
-                            <input type="number" class="input-me" name="bank_account_number"
+                            <input type="number" class="input-me validInputs" valid="bank_account_number" name="bank_account_number"
                                 :placeholder="$t('modals.bankAccount.form.accountNum')" />
                         </div>
                     </div>
                     <div class="input-g">
                         <div class="main-input">
-                            <input type="number" class="input-me" name="iban_number"
+                            <input type="text" class="input-me validInputs" valid="iban_number" name="iban_number"
                                 :placeholder="$t('modals.bankAccount.form.ibanNum')" />
                         </div>
                     </div>
                     <div class="input-g">
                         <div class="main-input">
-                            <input type="number" class="input-me" name="amount"
+                            <input type="number" class="input-me validInputs" valid="amount" name="amount"
                                 :placeholder="$t('modals.bankAccount.form.amount')" />
                         </div>
                     </div>
@@ -140,6 +140,9 @@
 <script setup>
 /******************* Plugins *******************/
 
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n({ useScope: 'global' });
+
 // success response
 const { response } = responseApi();
 
@@ -178,6 +181,9 @@ const loadingCharge = ref(false);
 
 // doneText
 const doneText = ref('');
+
+// errors
+const errors = ref([]);
 
 // config
 const config = {
@@ -228,25 +234,45 @@ const chargeWallet = async () => {
     });
 }
 
+
+// validation Function
+function validate() {
+    let allInputs = document.querySelectorAll('.validInputs');
+    for (let i = 0; i < allInputs.length; i++) {
+        if (allInputs[i].value === '') {
+            errors.value.push(t(`validation.${allInputs[i].getAttribute('valid')}`));
+        }
+    }
+}
+
 // Withdrawal Request سحب رصيد
 const withdrawalRequest = async () => {
     loadingCharge.value = true;
 
     const fd = new FormData(requestForm.value);
 
-    await axios.post(`withdrawal-request`, fd, config).then(res => {
-        if (response(res) == "success") {
-            doneText.value = res.data.msg;
-            chargeText.value = false;
-            wallet.value = false;
-            done.value = true;
-        } else {
-            errorToast(res.data.msg);
-        }
+    validate();
+
+    if (errors.value.length) {
+        errorToast(errors.value[0]);
         loadingCharge.value = false;
-    }).catch(err => {
-        console.error(err);
-    });
+        errors.value = [];
+    } else {
+        await axios.post(`withdrawal-request`, fd, config).then(res => {
+            if (response(res) == "success") {
+                doneText.value = res.data.msg;
+                chargeText.value = false;
+                wallet.value = false;
+                done.value = true;
+            } else {
+                errorToast(res.data.msg);
+            }
+            loadingCharge.value = false;
+        }).catch(err => {
+            console.error(err);
+        });
+    }
+
 }
 
 /******************* Computed *******************/

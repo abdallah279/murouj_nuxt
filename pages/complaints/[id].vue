@@ -81,14 +81,9 @@ import { useAuthStore } from '~/stores/auth';
 
 // Store
 const store = useAuthStore();
-const { token } = storeToRefs(store);
+const { token , notificationToken} = storeToRefs(store);
 
 const route = useRoute();
-
-// config
-const config = {
-    headers: { Authorization: `Bearer ${token.value}` }
-};
 
 // Loading
 const loading = ref(true);
@@ -103,7 +98,16 @@ const complaintDetailes = ref({});
 /******************* Methods *******************/
 // get complaints
 const getComplaints = async () => {
-    await axios.get(`complaint-details/${complaintId.value}`, config).then(res => {
+
+    let device;
+
+    if (!token.value) {
+        device = `?device_id=${notificationToken.value}&device_type=web`;
+    } else {
+        device = '';
+    }
+
+    await axios.get(`complaint-details/${complaintId.value}${device}`, config.value).then(res => {
         if (response(res) == "success") {
             complaintDetailes.value = res.data.data;
         }
@@ -116,7 +120,14 @@ const getComplaints = async () => {
 /******************* Computed *******************/
 const complaintId = computed(() => {
     return route.params.id
-})
+});
+
+// config
+const config = computed(() => {
+    return token.value ? {
+        headers: { Authorization: `Bearer ${token.value}` }
+    } : {}
+});
 
 /******************* Watch *******************/
 
@@ -126,10 +137,6 @@ onMounted(async () => {
 });
 
 /******************* Required Auth *******************/
-definePageMeta({
-  middleware: 'auth'
-});
-
 </script>
 
 <style lang="scss"></style>

@@ -42,11 +42,13 @@
 
                         <div class="d-flex gap-1 justify-content-center mt-4 c-light">
                             {{ $t('codeForm.text') }}
-                            <button type="button" @click="resendCode"
+                            <button type="button" :disabled="disabledBtn" @click="resendCode"
                                 class="bg-transparent d-block text-decoration-underline c-main">
                                 {{ $t('formBtns.receiveCode') }}
                             </button>
                         </div>
+
+                        <div class="mt-3 text-center">{{ counterText }}</div>
                     </form>
                 </div>
             </div>
@@ -84,6 +86,13 @@ const confirmPassword = ref('');
 const loading = ref(false);
 const router = useRouter();
 const errors = ref([]);
+
+// counter
+const counterNum = ref(60);
+const counterText = ref('');
+
+// disabledBtn
+const disabledBtn = ref(false);
 
 /******************* Provide && Inject *******************/
 
@@ -154,16 +163,52 @@ const resendCode = async () => {
     await axios.get(`resend-code?country_code=${user.value.country_code}&phone=${user.value.phone}`).then(res => {
         if (response(res) == "success") {
             successToast(res.data.msg);
+
+            counterNum.value = 60;
+            codeCounter();
         } else {
             errorToast(res.data.msg);
         }
     }).catch(err => console.log(err));
 }
+
+
+let counter;
+function codeCounter() {
+    disabledBtn.value = true;
+
+    counter = setInterval(function () {
+        counterNum.value--;
+        if (counterNum.value < 60) {
+            counterText.value = `${counterNum.value} : 00`;
+        }
+
+        if (counterNum.value > 60) {
+            counterText.value = `00 : ${counterNum.value}`;
+        }
+
+        if (counterNum.value < 10) {
+            counterText.value = `0${counterNum.value} : 00`;
+        }
+
+        if (counterNum.value == 0) {
+            clearInterval(counter);
+            disabledBtn.value = false;
+        }
+    }, 1000);
+}
+
+
 /******************* Computed *******************/
 
 /******************* Watch *******************/
 
 /******************* Mounted *******************/
+
+onMounted(() => {
+    codeCounter();
+});
+
 </script>
 
 <style></style>

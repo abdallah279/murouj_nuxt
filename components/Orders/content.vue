@@ -80,8 +80,6 @@ const getOrders = async () => {
             orders.value = res.data.data.data;
             totalPage.value = res.data.data.pagination.total_items;
             pageLimit.value = res.data.data.pagination.per_page;
-        } else {
-            errorToast(res.data.msg);
         }
         loading.value = false;
     }).catch(err => {

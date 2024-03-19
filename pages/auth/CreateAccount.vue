@@ -145,7 +145,7 @@
                                 <label class="check" for="conditions"></label>
                                 <label class="check-anchor fs13 c-light2" for="conditions">
                                     {{ $t('createAccountForm.agree') }}
-                                    <NuxtLink to="/terms" class="text-decoration-underline c-main">
+                                    <NuxtLink to="/terms" @click="saveData" class="text-decoration-underline c-main">
                                         {{ $t('createAccountForm.terms') }}
                                     </NuxtLink>
                                 </label>
@@ -199,7 +199,8 @@ import proImage from "@/assets/imgs/profile.png";
 
 // Store
 const store = useAuthStore();
-const { signUpHandler } = store;
+const { signUpData } = storeToRefs(store);
+const { signUpHandler , signUpHandlerData} = store;
 
 const router = useRouter();
 
@@ -268,6 +269,8 @@ const getCountries = async () => {
 
 // Get All Cities
 const getCities = async () => {
+    // cities.value = [];
+    city.value = '';
     await axios.get(`country/${country.value.id}/cities`).then(res => {
         if (response(res) == "success") {
             cities.value = res.data.data;
@@ -317,6 +320,39 @@ const signUp = async () => {
     }
 }
 
+// saveData
+const saveData = () => {
+    const fd = {
+        image: image.value,
+        name: name.value,
+        phone: phone.value,
+        country_code: selectedCountry.value,
+        email: email.value,
+        password: password.value,
+        confirmPassword: confirmPassword.value,
+        country: country.value,
+        city: city.value
+    };
+
+    signUpHandlerData(fd);
+}
+
+// getSavedData from Pinia
+const getSavedData = async () => {
+    if(signUpData.value){
+        // signUpData.value.image ? image.value = signUpData.value.image : image.value = proImage;
+        name.value = signUpData.value.name;
+        phone.value = signUpData.value.phone;
+        signUpData.value.country_code ? selectedCountry.value = signUpData.value.country_code : '';
+        email.value = signUpData.value.email;
+        password.value = signUpData.value.password;
+        confirmPassword.value = signUpData.value.confirmPassword;
+        country.value = signUpData.value.country;
+        country.value ? await getCities() : '';
+        city.value = signUpData.value.city;
+    }
+}
+
 
 /******************* Computed *******************/
 
@@ -325,7 +361,8 @@ const signUp = async () => {
 /******************* Mounted *******************/
 onMounted(async () => {
     await getCountries();
-})
+    getSavedData();
+});
 </script>
 
 <style></style>

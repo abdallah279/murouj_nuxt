@@ -499,6 +499,7 @@
     "name": "Name Is required",
     "phone": "Please enter phone number",
     "email": "Please enter a valid Email",
+    "old_password": "Please enter your Current password",
     "password": "Please enter your password",
     "confirmPassword": "The password does not match",
     "search": "Search word is required",
@@ -511,7 +512,12 @@
     "copy": "The link was copied successfully",
     "retrieval_reason": "Return reason is required",
     "returnImg": "Return photos are required",
-    "products": "Select the products to be returned"
+    "products": "Select the products to be returned",
+    "bank_account_name": "Account Holder's Name is required",
+    "bank_name": "Bank name is required",
+    "bank_account_number": "Bank account number is required",
+    "iban_number": "Iban Number is required",
+    "amount": "Amount is required"
   },
   "cart": {
     "products": "products",

@@ -15,9 +15,15 @@ export const useAuthStore = defineStore("auth", {
     token: null,
     isLoggedIn: false,
     newPhone: null,
-    notificationToken: null,
+    notificationToken: '10000',
+    signUpData: {},
   }),
   actions: {
+    // Sign Up
+    signUpHandlerData(formData) {
+      this.signUpData = formData;
+    },
+
     // Sign In
     async signInHandler(formData) {
       const resData = await axios.post("sign-in?count_notifications", formData);
@@ -37,6 +43,7 @@ export const useAuthStore = defineStore("auth", {
       const resData = await axios.post("sign-up", formData);
       if (response(resData) == "success") {
         this.user = resData.data.data;
+        this.signUpData = {};
         navigateTo("/auth/codeAccount");
         return { status: "success", msg: resData.data.msg };
       } else {

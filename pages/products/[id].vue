@@ -87,8 +87,8 @@
                                 </div>
 
                                 <div class="price_con">
-                                    <p class="price">{{ product.discount_price }} {{ product.currency }}</p>
-                                    <p class="price old">{{ product.price }} {{ product.currency }}</p>
+                                    <p class="price" v-if="product.discount_price">{{ product.discount_price }} {{ product.currency }}</p>
+                                    <p class="price" :class="{ old: product.discount_price }">{{ product.price }} {{ product.currency }}</p>
                                 </div>
                             </div>
 
@@ -301,6 +301,8 @@ const product = ref({
     price: '',
     discount_price: '',
     is_favourite: false,
+    offer_id: null,
+    has_offer: false,
     images: [],
 });
 
@@ -332,8 +334,15 @@ const getData = async () => {
             product.value.description = res.data.data.description;
             product.value.price = res.data.data.price;
             product.value.discount_price = res.data.data.discount_price;
+            product.value.has_offer = res.data.data.has_offer;
+            product.value.offer_id = res.data.data.offer_id;
             fav.value = res.data.data.is_favourite;
             product.value.images = res.data.data.attachments;
+
+            if (res.data.data.has_offer) {
+                product.value.price = res.data.data.offer_price;
+                product.value.discount_price = null;
+            }
         }
         loading.value = false;
     }).catch(err => console.log(err));
@@ -376,7 +385,7 @@ const addToCart = async () => {
     loadingCart.value = true;
 
     const fd = new FormData();
-    fd.append('product_id', productId.value);
+    product.value.has_offer ? fd.append('offer_id', product.value.offer_id) : fd.append('product_id', productId.value);
     fd.append('quantity', quantity.value);
 
     await axios.post(`carts`, fd, config.value).then(res => {

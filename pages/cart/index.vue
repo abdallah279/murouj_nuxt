@@ -28,14 +28,28 @@
                                 </div>
 
                                 <div v-if="showPaginate">
-                                    <Paginator :rows="pageLimit" @page="onPaginate" :totalRecords="totalPage" class="mt-4"
-                                        dir="ltr" />
+                                    <Paginator :rows="pageLimit" @page="onPaginate" :totalRecords="totalPage"
+                                        class="mt-4" dir="ltr" />
                                 </div>
                             </div>
 
                             <div class="col-lg-4">
                                 <div class="main-border rounded-1 p-3">
                                     <h5 class="fs14 ff-d mb-4">{{ $t('cart.sidebar.complete') }}</h5>
+
+                                    <form action="" class="mb-4" @submit.prevent="checkCoupon">
+                                        <label for="" class="mb-2">{{ $t('cart.sidebar.discountLable') }}</label>
+                                        <div class="main-input discount">
+                                            <input type="text" v-model='coupon'
+                                                :placeholder="$t('cart.sidebar.placeholder')" class="input-me">
+                                            <button type="submit" class="main-btn up blue sm">
+                                                {{ $t('formBtns.confirm') }}
+                                                <span class="spinner-border spinner-border-sm" v-if="loadingCoupon"
+                                                    role="status" aria-hidden="true"></span>
+                                            </button>
+                                        </div>
+                                    </form>
+
                                     <div class="d-flex-between gap-2 ff-d flex-wrap mb-3">
                                         <span class="c-black">{{ $t('cart.sidebar.orderPrice') }}</span>
                                         <span class="c-blue"> {{ summary.total_price }} {{ summary.currency }}</span>
@@ -50,12 +64,12 @@
                                             {{ summary.discount_price }} {{ summary.currency }}
                                         </span>
                                     </div>
-                                    <div class="d-flex-between main-bb pb-3 gap-2 ff-d flex-wrap mb-3">
+                                    <!-- <div class="d-flex-between main-bb pb-3 gap-2 ff-d flex-wrap mb-3">
                                         <span class="c-black">{{ $t('cart.sidebar.drivePrice') }}</span>
                                         <span class="c-blue">
                                             {{ summary.shipping_price }} {{ summary.currency }}
                                         </span>
-                                    </div>
+                                    </div> -->
 
                                     <div class="d-flex-between gap-2 ff-d flex-wrap mb-3">
                                         <span class="c-black">{{ $t('cart.sidebar.total') }}</span>
@@ -70,7 +84,7 @@
                         </div>
 
                         <div class="no-data" v-if="!orderProducts.length">
-                            <img  loading="lazy" src="@/assets/imgs/no_data.avif" alt="image" class="no-data-img">
+                            <img loading="lazy" src="@/assets/imgs/no_data.avif" alt="image" class="no-data-img">
                             <div class="no-data-text">{{ $t('noData.cart') }}</div>
                         </div>
 
@@ -116,7 +130,7 @@
 const { response } = responseApi();
 
 // Toast
-const { errorToast } = toastMsg();
+const { successToast, errorToast } = toastMsg();
 
 // Axios
 const axios = useApi();
@@ -143,6 +157,10 @@ const config = {
 
 // loading
 const loading = ref(false);
+const loadingCoupon = ref(false);
+
+// coupon
+const coupon = ref('');
 
 // Paginator
 const currentPage = ref(1);
@@ -173,6 +191,28 @@ const getCart = async (load) => {
     });
 }
 
+
+// check Coupon
+const checkCoupon = async () => {
+    loadingCoupon.value = true;
+
+    const fd = new FormData();
+    fd.append('coupon_num', coupon.value);
+    fd.append('total_price', summary.value.final_total);
+
+    await axios.post(`check-coupon`, fd, config).then(res => {
+        if (response(res) == "success") {
+            successToast(res.data.msg);
+            summary.value = res.data.data;
+        } else {
+            errorToast(res.data.msg);
+        }
+        loadingCoupon.value = false;
+    }).catch(err => {
+        console.error(err);
+    });
+}
+
 // Paginate Function
 const onPaginate = (e) => {
     loading.value = true;
@@ -195,7 +235,7 @@ onMounted(async () => {
 
 /******************* Required Auth *******************/
 definePageMeta({
-  middleware: 'auth'
+    middleware: 'auth'
 });
 
 </script>

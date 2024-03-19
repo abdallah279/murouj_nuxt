@@ -21,7 +21,9 @@
 <script setup>
 
 /******************* Redirect To Waiting Page *******************/
-navigateTo("/orders/purchaseOrders/waiting");
+const router = useRouter();
+
+router.push({ path: '/orders/purchaseOrders/waiting' });
 
 /******************* Import *******************/
 

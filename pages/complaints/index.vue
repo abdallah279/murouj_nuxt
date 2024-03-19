@@ -11,11 +11,12 @@
                 <div class="col-xl-8 col-lg-10 mx-auto">
                     <div v-if="!loading">
                         <div v-if="complaints.length">
-                            <ComplaintsCard :complaint="complaint" v-for="complaint in complaints" :key="complaint.id" />
+                            <ComplaintsCard :complaint="complaint" v-for="complaint in complaints"
+                                :key="complaint.id" />
                         </div>
 
                         <div class="no-data" v-else>
-                            <img  loading="lazy" src="@/assets/imgs/no_data.avif" alt="image" class="no-data-img">
+                            <img loading="lazy" src="@/assets/imgs/no_data.avif" alt="image" class="no-data-img">
                             <div class="no-data-text">{{ $t('noData.complaint') }}</div>
                         </div>
                     </div>
@@ -45,18 +46,13 @@ import { useAuthStore } from '~/stores/auth';
 
 // Store
 const store = useAuthStore();
-const { token } = storeToRefs(store);
+const { token, notificationToken } = storeToRefs(store);
 
 // loading
 const loading = ref(false);
 
 // complaints
 const complaints = ref([]);
-
-// config
-const config = {
-    headers: { Authorization: `Bearer ${token.value}` }
-};
 
 /******************* Provide && Inject *******************/
 
@@ -67,7 +63,16 @@ const config = {
 // get complaints
 const getComplaints = async () => {
     loading.value = true;
-    await axios.get('get-complaints', config).then(res => {
+
+    let device;
+
+    if (!token.value) {
+        device = `?device_id=${notificationToken.value}&device_type=web`;
+    } else {
+        device = '';
+    }
+
+    await axios.get(`get-complaints${device}`, config.value).then(res => {
         if (response(res) == "success") {
             complaints.value = res.data.data.data;
         }
@@ -79,6 +84,13 @@ const getComplaints = async () => {
 
 /******************* Computed *******************/
 
+// config
+const config = computed(() => {
+    return token.value ? {
+        headers: { Authorization: `Bearer ${token.value}` }
+    } : {}
+});
+
 /******************* Watch *******************/
 
 /******************* Mounted *******************/
@@ -87,9 +99,6 @@ onMounted(async () => {
 });
 
 /******************* Required Auth *******************/
-definePageMeta({
-  middleware: 'auth'
-});
 
 </script>
 

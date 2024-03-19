@@ -9,7 +9,6 @@
         <img  loading="lazy" :src="product.image" alt="image" class="product_img">
         <div class="product_body">
             <NuxtLink v-if="!view" :to="`/products/${productId}`" class="product_name">
-                <i class="pi pi-arrow-left c-main"></i>
                 {{ product.name }}
             </NuxtLink>
             <h3 v-if="view" class="product_name">{{ product.name }}</h3>
@@ -121,9 +120,9 @@ const addToCart = async () => {
 
     const fd = new FormData();
     fd.append('product_id', productId.value);
-    fd.append('quantity', 1);
+    // fd.append('quantity', 1);
 
-    await axios.post(`carts`, fd, config).then(res => {
+    await axios.post(`quick-add-to-cart`, fd, config).then(res => {
         if (response(res) == "success") {
             successToast(t("products.addedToCart"));
             cartChanged.value += 1;

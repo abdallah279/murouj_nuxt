@@ -12,7 +12,7 @@
         </div>
 
         <div class="product_footer">
-            <button class="main-btn up" @click="addToCart">
+            <button class="main-btn up" @click="addToCart" :disabled="loading">
                 <i class="pi pi-shopping-bag"></i>
                 {{ $t('products.addToCart') }}
                 <span class="spinner-border spinner-border-sm" v-if="loading" role="status" aria-hidden="true"></span>
@@ -46,12 +46,19 @@ const axios = useApi();
 
 // pinia store
 import { useAuthStore } from '~/stores/auth';
+import { useGlobalStore } from '~/stores/global';
 
 /******************* Data *******************/
 
 // Store
 const store = useAuthStore();
 const { token } = storeToRefs(store);
+
+// Global Store
+const globalStore = useGlobalStore();
+const { cartChanged } = storeToRefs(globalStore);
+
+/*************** DATA *****************/
 
 // config
 const config = {
@@ -82,11 +89,12 @@ const addToCart = async () => {
 
     const fd = new FormData();
     fd.append('offer_id', props.offer.id);
-    fd.append('quantity', 1);
+    // fd.append('quantity', 1);
 
-    await axios.post(`carts`, fd, config).then(res => {
+    await axios.post(`quick-add-to-cart`, fd, config).then(res => {
         if (response(res) == "success") {
             successToast(res.data.msg);
+            cartChanged.value += 1;
         } else {
             errorToast(res.data.msg);
         }

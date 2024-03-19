@@ -47,9 +47,10 @@
 
                                 <label class="d-flex-between gap-4 cu-pointer p-3 mb-3 bg-light2"
                                     v-for="dtype in deliveryTypes" :key="dtype">
-                                    <div class="radio-box">
+                                    <div class="radio-box radio_del">
                                         <input type="radio" class="input-radio main" name="delivery_type"
                                             v-model="delivery_type" :value="dtype.type">
+                                            <span class="radio_box"></span>
                                         <label for="price1" class="label">
                                             {{ dtype.delegate_name }}
                                             ( {{ dtype.delivery_expected_time }} )
@@ -78,7 +79,7 @@
                                         <label :for="`payment${i}`" class="payment-label">
 
                                             <div class="right">
-                                                <img  loading="lazy" :src="pay.icon" alt="image" class="payment-img">
+                                                <img loading="lazy" :src="pay.icon" alt="image" class="payment-img">
                                                 <div class="content">
                                                     <div class="name">{{ pay.name }}</div>
                                                     <div class="text">{{ pay.desc }}</div>
@@ -150,11 +151,12 @@
                                                     name="additional_recipient_phone" v-model="phone"
                                                     :placeholder="$t('cart.form.phone')">
 
-                                                <Dropdown v-model="selectedCountry" :options="countries" optionLabel="name"
-                                                    class="main-icon selectedCountry">
+                                                <Dropdown v-model="selectedCountry" :options="countries"
+                                                    optionLabel="name" class="main-icon selectedCountry">
                                                     <template #value="slotProps">
                                                         <div v-if="slotProps.value" class="selected">
-                                                            <img  loading="lazy" v-if="slotProps.value.image" :alt="slotProps.value.label"
+                                                            <img loading="lazy" v-if="slotProps.value.image"
+                                                                :alt="slotProps.value.label"
                                                                 :src="slotProps.value.image" class="option-img" />
                                                             <div>{{ slotProps.value.key }}</div>
                                                             <i class="pi pi-angle-down ic"></i>
@@ -165,7 +167,7 @@
                                                     </template>
                                                     <template #option="slotProps">
                                                         <div class="option">
-                                                            <img  loading="lazy" v-if="slotProps.option.image"
+                                                            <img loading="lazy" v-if="slotProps.option.image"
                                                                 :alt="slotProps.option.number" class="option-img"
                                                                 :src="slotProps.option.image" />
                                                             <div>
@@ -188,8 +190,8 @@
                                 <form action="" class="mb-4" @submit.prevent="checkCoupon">
                                     <label for="" class="mb-2">{{ $t('cart.sidebar.discountLable') }}</label>
                                     <div class="main-input discount">
-                                        <input type="text" v-model='coupon' :placeholder="$t('cart.sidebar.placeholder')"
-                                            class="input-me">
+                                        <input type="text" v-model='coupon'
+                                            :placeholder="$t('cart.sidebar.placeholder')" class="input-me">
                                         <button type="submit" class="main-btn up blue sm">
                                             {{ $t('formBtns.confirm') }}
                                             <span class="spinner-border spinner-border-sm" v-if="loadingCoupon"
@@ -208,7 +210,7 @@
                                 <div class="d-flex-between gap-2 ff-d flex-wrap mb-3">
                                     <span class="c-black">{{ $t('cart.sidebar.discountPrice') }}</span>
                                     <span class="c-blue"> {{ summary.discount_price }} {{ summary.currency
-                                    }}</span>
+                                        }}</span>
                                 </div>
                                 <div class="d-flex-between main-bb pb-3 gap-2 ff-d flex-wrap mb-3">
                                     <span class="c-black">{{ $t('cart.sidebar.drivePrice') }}</span>
@@ -220,7 +222,8 @@
                                     <span class="c-blue"> {{ summary.final_total }} {{ summary.currency }}</span>
                                 </div>
 
-                                <button type="submit" form="confirmOrder" class="main-btn mt-3 w-100 shadow-sm mx-auto up">
+                                <button type="submit" form="confirmOrder"
+                                    class="main-btn mt-3 w-100 shadow-sm mx-auto up">
                                     {{ $t('cart.sidebar.btn') }}
                                     <span class="spinner-border spinner-border-sm" v-if="loadingBtn" role="status"
                                         aria-hidden="true"></span>
@@ -256,8 +259,8 @@
         <Dialog id="map" class="xl address" :header="$t('modals.address.header')" v-model:visible="mapModal" modal>
             <div class="modal-form position-relative">
                 <div class="address_text"><i class="pi pi-map-marker"></i> {{ address }} </div>
-                <GoogleMap apiKey="AIzaSyBNLoYGrbnQI_GMqHt6m0PSN9yA7Zvq7gA" language="ar" @change-address="changeAddress"
-                    height="360px" />
+                <GoogleMap apiKey="AIzaSyBNLoYGrbnQI_GMqHt6m0PSN9yA7Zvq7gA" language="ar" :autocomplete="true"
+                    @change-address="changeAddress" height=" 360px" />
                 <button type="button" @click="mapModal = false" class="main-btn modal_btn up">
                     {{ $t('modals.address.btn') }}
                 </button>
@@ -270,7 +273,7 @@
         <div class="row">
             <div class="col-lg-10 mx-auto">
                 <div class="right_sec">
-                    <img  loading="lazy" src="@/assets/imgs/right_img.gif" alt="image" class="right_img mx-auto">
+                    <img loading="lazy" src="@/assets/imgs/right_img.gif" alt="image" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4">{{ $t('modals.done.orderDone') }}</p>
                     <div class="buttons justify-content-center">
                         <NuxtLink to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>
@@ -402,6 +405,10 @@ const addressLng = ref('');
 const delivery_type = ref('');
 const deliveryTypes = ref({});
 
+// current location
+const currentLat = ref(null);
+const currentLng = ref(null);
+
 // summary
 const summary = ref({});
 
@@ -517,6 +524,17 @@ const checkCoupon = async () => {
         loadingCoupon.value = false;
     }).catch(err => {
         console.error(err);
+    });
+}
+
+// getCurrent
+const getCurrent = () => {
+    navigator.geolocation.getCurrentPosition((position) => {
+        currentLat.value = position.coords.latitude;
+        currentLng.value = position.coords.longitude;
+
+        console.log(currentLat.value);
+        console.log(currentLng.value);
     });
 }
 

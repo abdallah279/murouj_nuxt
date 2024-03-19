@@ -68,13 +68,15 @@
                             </div>
                         </div>
 
-                        <div class="input-g">
-                            <div class="main-input">
-                                <textarea class="input-me text-area validInputs" valid="message" name="content"
-                                    v-model="message" :placeholder="$t('addComplaintsForm.message')">
-                                </textarea>
+                        <ClientOnly>
+                            <div class="input-g">
+                                <div class="main-input">
+                                    <textarea class="input-me text-area validInputs" valid="message" name="content"
+                                        v-model="message" :placeholder="$t('addComplaintsForm.message')">
+                                    </textarea>
+                                </div>
                             </div>
-                        </div>
+                        </ClientOnly>
 
                         <div class="input-g d-flex gap-3 flex-wrap">
                             <label for="uploadImgs" class="upload-label">
@@ -120,7 +122,7 @@
                     <img  loading="lazy" src="@/assets/imgs/right_img.gif" alt="image" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4">{{ $t('modals.done.text') }}</p>
                     <div class="buttons justify-content-center">
-                        <NuxtLink to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>
+                        <NuxtLink to="/complaints" class="main-btn modal_btn up">{{ $t('nav.profile.complaints') }}</NuxtLink>
                     </div>
                 </div>
             </div>
@@ -149,7 +151,7 @@ import { useAuthStore } from '~/stores/auth';
 
 // Store
 const store = useAuthStore();
-const { token } = storeToRefs(store);
+const { token, notificationToken } = storeToRefs(store);
 
 
 // Form
@@ -234,10 +236,6 @@ function validate() {
     }
 }
 
-// config
-const config = {
-    headers: { Authorization: `Bearer ${token.value}` }
-};
 
 // contactUs Function
 const addComplaints = async () => {
@@ -249,6 +247,11 @@ const addComplaints = async () => {
         fd.append('attachments[]', img);
     }
 
+    if(!token.value){
+        fd.append('device_id', notificationToken.value);
+        fd.append('device_type', 'web');
+    }
+
     validate();
 
     if (errors.value.length) {
@@ -256,7 +259,7 @@ const addComplaints = async () => {
         loading.value = false;
         errors.value = [];
     } else {
-        await axios.post('add-complaint', fd, config).then(res => {
+        await axios.post('add-complaint', fd, config.value).then(res => {
             if (response(res) == "success") {
 
                 done.value = true;
@@ -272,6 +275,13 @@ const addComplaints = async () => {
 
 /******************* Computed *******************/
 
+// config
+const config = computed(() => {
+    return token.value ? {
+        headers: { Authorization: `Bearer ${token.value}` }
+    } : {}
+});
+
 /******************* Watch *******************/
 
 /******************* Mounted *******************/
@@ -280,9 +290,6 @@ onMounted(async ()=>{
 });
 
 /******************* Required Auth *******************/
-definePageMeta({
-  middleware: 'auth'
-});
 
 </script>
 

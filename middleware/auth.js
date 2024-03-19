@@ -15,8 +15,9 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const t = nuxtApp.vueApp.config.globalProperties.$t;
 
   if (isLoggedIn.value === false && to.meta.middleware == "auth") {
+    // next(false);
+    // redirect(from.path);
     errorToast(t("validation.requiresAuth"));
-    return nuxtApp.runWithContext(() => abortNavigation());
-    // return abortNavigation("");
+    // return false;
   }
 });

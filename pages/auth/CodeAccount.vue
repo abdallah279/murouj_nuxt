@@ -1,24 +1,28 @@
 <template>
     <main class="codeAccount main-padding">
         <div class="container">
-            <PageHeader :title="$t('sectionTitle.verificationCode')" margin="mb-5" :desc="$t('sectionDesc.codeForm')" />
+            <ClientOnly>
+                <PageHeader :title="$t('sectionTitle.verificationCode')" margin="mb-5" :desc="$t('sectionDesc.codeForm')" />
+            </ClientOnly>
 
             <div class="row justify-content-center">
                 <div class="col-lg-6">
 
                     <form action="" @submit.prevent="verificationCode">
 
-                        <v-otp-input ref="otpInput" v-model:value="bindModal" dir="ltr" class="justify-content-center mb-4"
+                        <v-otp-input ref="otpInput" dir="ltr" v-model:value="bindModal" class="justify-content-center mb-4"
                             input-classes="otp-input" separator="" :num-inputs="6" :should-auto-focus="true"
                             input-type="letter-numeric" />
 
                         <div class="d-flex gap-1 justify-content-center c-light">
                             {{ $t('codeForm.text') }}
-                            <button type="button" @click="resendCode"
+                            <button type="button" :disabled="disabledBtn" @click="resendCode"
                                 class="bg-transparent d-block text-decoration-underline c-main">
                                 {{ $t('formBtns.receiveCode') }}
                             </button>
                         </div>
+                        
+                        <div class="mt-3 text-center">{{ counterText }}</div>
 
                         <button type="submit" class="main-btn up mx-auto lg mt-4" :disabled="loading">
                             <span v-if="!loading">
@@ -67,6 +71,13 @@ const otpInput = ref(null);
 const bindModal = ref("");
 const router = useRouter();
 
+// counter
+const counterNum = ref(60);
+const counterText = ref('');
+
+// disabledBtn
+const disabledBtn = ref(false);
+
 /******************* Provide && Inject *******************/
 
 /******************* Props *******************/
@@ -80,7 +91,6 @@ const verificationCode = async () => {
     fd.append('code', bindModal.value);
     fd.append('phone', user.value.phone);
     fd.append('country_code', user.value.country_code);
-    // fd.append('device_id', 111);
     fd.append('device_id', notificationToken.value);
     fd.append('device_type', 'web');
 
@@ -94,20 +104,52 @@ const verificationCode = async () => {
 
 // resendCode Function
 const resendCode = async () => {
+    disabledBtn.value = true;
     await axios.get(`resend-code?country_code=${user.value.country_code}&phone=${user.value.phone}`).then(res => {
         if (response(res) == "success") {
             successToast(res.data.msg);
+            counterNum.value = 60;
+            codeCounter();
         } else {
             errorToast(res.data.msg);
         }
     }).catch(err => console.log(err));
 }
 
+let counter;
+function codeCounter() {
+    disabledBtn.value = true;
+
+    counter = setInterval(function () {
+        counterNum.value--;
+        if (counterNum.value < 60) {
+            counterText.value = `${counterNum.value} : 00`;
+        }
+
+        if (counterNum.value > 60) {
+            counterText.value = `00 : ${counterNum.value}`;
+        }
+
+        if (counterNum.value < 10) {
+            counterText.value = `0${counterNum.value} : 00`;
+        }
+
+        if (counterNum.value == 0) {
+            clearInterval(counter);
+            disabledBtn.value = false;
+        }
+    }, 1000);
+}
+
+
 /******************* Computed *******************/
 
 /******************* Watch *******************/
 
 /******************* Mounted *******************/
+onMounted(() => {
+    codeCounter();
+});
 
 </script>
 

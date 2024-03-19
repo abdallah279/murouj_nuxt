@@ -216,7 +216,7 @@
 
 
     <!-- Start Alert -->
-    <div class="alert_nav">
+    <div class="alert_nav" v-if="isLoggedIn">
         <div class="container">
             <div class="text-center fs13">
                 {{ $t('nav.shipping.text') }}
@@ -353,7 +353,7 @@
                     <img  loading="lazy" src="@/assets/imgs/right_img.gif" alt="image" class="right_img mx-auto">
                     <p class="fs14 c-black text-center mb-4">{{ $t('modals.done.rateDone') }}</p>
                     <div class="buttons justify-content-center">
-                        <NuxtLink to="/" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>
+                        <NuxtLink to="/" @click="done = false" class="main-btn modal_btn up">{{ $t('modals.done.btn') }}</NuxtLink>
                     </div>
                 </div>
             </div>
@@ -393,7 +393,7 @@ const store = useAuthStore();
 const globalStore = useGlobalStore();
 
 const { logoutHandler } = store;
-const { user, isLoggedIn, token } = storeToRefs(store);
+const { user, isLoggedIn, token , isNavigatingToLogin} = storeToRefs(store);
 const { shippingCount, cityLocal, countryLocal, countryChanged, countryID, cartChanged, lang } = storeToRefs(globalStore);
 
 // Router

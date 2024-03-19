@@ -68,7 +68,7 @@
                 <div class="col-lg-4 col-md-6 col-12">
                     <div class="foot-content">
                         <h3 class="footer-head mb-4">{{ $t('footer.storeName') }}</h3>
-                        <p class="footer-info">{{ about }}</p>
+                        <p class="footer-info" v-html="about"></p>
                     </div>
                 </div>
 
@@ -101,10 +101,10 @@
                         <h3 class="footer-head mb-4">{{ $t('footer.download') }}</h3>
                         <div class="footer-links">
                             <a :href="android_link" target="_blank"  class="link mb-3" aria-label="Android Link">
-                                <img  loading="lazy" src="@/assets/imgs/google.png" class="app-link" alt="image">
+                                <img loading="lazy" src="@/assets/imgs/google.png" class="app-link" alt="image">
                             </a>
                             <a :href="apple_link" target="_blank"  class="link mb-3" aria-label="Apple Link">
-                                <img  loading="lazy" src="@/assets/imgs/app.png" class="app-link" alt="image">
+                                <img loading="lazy" src="@/assets/imgs/app.png" class="app-link" alt="image">
                             </a>
                         </div>
                     </div>
