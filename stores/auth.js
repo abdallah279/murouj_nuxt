@@ -31,7 +31,6 @@ export const useAuthStore = defineStore("auth", {
         this.user = resData.data.data;
         this.token = resData.data.data.token;
         this.isLoggedIn = true;
-        navigateTo("/");
         return { status: "success", msg: resData.data.msg };
       } else {
         return { status: "error", msg: resData.data.msg };
@@ -57,7 +56,6 @@ export const useAuthStore = defineStore("auth", {
       if (response(resData) == "success") {
         this.token = resData.data.data.token;
         this.isLoggedIn = true;
-        navigateTo("/");
         return { status: "success", msg: resData.data.msg };
       } else {
         return { status: "error", msg: resData.data.msg };
@@ -122,7 +120,6 @@ export const useAuthStore = defineStore("auth", {
         };
 
         this.isLoggedIn = false;
-        navigateTo("/");
         return { status: "success", msg: resData.data.msg };
       } else {
         return { status: "error", msg: resData.data.msg };
@@ -147,7 +144,6 @@ export const useAuthStore = defineStore("auth", {
           country_code: "",
         };
         this.isLoggedIn = false;
-        navigateTo("/");
         return { status: "success", msg: resData.data.msg };
       } else {
         return { status: "error", msg: resData.data.msg };

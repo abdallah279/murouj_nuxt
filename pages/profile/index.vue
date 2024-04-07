@@ -447,7 +447,13 @@ const deleteAccount = async () => {
 
     // Get Returned Data From Store
     const res = await deleteAccountHandler();
-    res.status == "success" ? successToast(res.msg) : errorToast(res.msg);
+
+    if(res.status == "success"){
+        router.push('/');
+        successToast(res.msg)
+    } else{
+        errorToast(res.msg)
+    }
 
     loadingDelete.value = false;
 }

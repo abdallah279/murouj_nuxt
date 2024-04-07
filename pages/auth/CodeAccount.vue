@@ -2,7 +2,8 @@
     <main class="codeAccount main-padding">
         <div class="container">
             <ClientOnly>
-                <PageHeader :title="$t('sectionTitle.verificationCode')" margin="mb-5" :desc="$t('sectionDesc.codeForm')" />
+                <PageHeader :title="$t('sectionTitle.verificationCode')" margin="mb-5"
+                    :desc="$t('sectionDesc.codeForm')" />
             </ClientOnly>
 
             <div class="row justify-content-center">
@@ -10,9 +11,9 @@
 
                     <form action="" @submit.prevent="verificationCode">
 
-                        <v-otp-input ref="otpInput" dir="ltr" v-model:value="bindModal" class="justify-content-center mb-4"
-                            input-classes="otp-input" separator="" :num-inputs="6" :should-auto-focus="true"
-                            input-type="letter-numeric" />
+                        <v-otp-input ref="otpInput" dir="ltr" v-model:value="bindModal"
+                            class="justify-content-center mb-4" input-classes="otp-input" separator="" :num-inputs="6"
+                            :should-auto-focus="true" input-type="letter-numeric" />
 
                         <div class="d-flex gap-1 justify-content-center c-light">
                             {{ $t('codeForm.text') }}
@@ -21,7 +22,7 @@
                                 {{ $t('formBtns.receiveCode') }}
                             </button>
                         </div>
-                        
+
                         <div class="mt-3 text-center">{{ counterText }}</div>
 
                         <button type="submit" class="main-btn up mx-auto lg mt-4" :disabled="loading">
@@ -96,7 +97,13 @@ const verificationCode = async () => {
 
     // Get Returned Data From Store
     const res = await verificationHandler(fd);
-    res.status == "success" ? successToast(res.msg) : errorToast(res.msg);
+
+    if (res.status == "success") {
+        router.push('/');
+        successToast(res.msg)
+    } else {
+        errorToast(res.msg)
+    }
 
     loading.value = false;
 

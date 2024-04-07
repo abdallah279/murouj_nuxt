@@ -588,8 +588,13 @@ const logout = async () => {
 
     // Get Returned Data From Store
     const res = await logoutHandler();
-    res.status == "success" ? successToast(res.msg) : errorToast(res.msg);
-
+    
+    if(res.status == "success"){
+        router.push('/');
+        successToast(res.msg)
+    } else{
+        errorToast(res.msg)
+    }
 }
 
 // get notifications Count
