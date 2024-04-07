@@ -88,6 +88,15 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  display: none;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 input[type="password"]::-ms-reveal,
 input[type="password"]::-ms-clear {
   display: none !important;
@@ -127,7 +136,6 @@ textarea {
 i {
   line-height: inherit !important;
   font-size: 13px !important;
-
 }
 .pi-angle-double-left,
 .pi-angle-left,

@@ -41,7 +41,7 @@
                         </div>
                         <div class="info">
                             <h5 class="name">{{ $t('subscribeMail.contactItems.phone') }}</h5>
-                            <a :href="`tel:${contact_data.phone}`" target="_blank" class="text">{{ contact_data.phone }}</a>
+                            <a :href="`tel:${contact_phone}`" target="_blank" class="text">{{ contact_phone }}</a>
                         </div>
                     </div>
 
@@ -51,8 +51,9 @@
                         </div>
                         <div class="info">
                             <h5 class="name">{{ $t('subscribeMail.contactItems.mail') }}</h5>
-                            <a :href="`mailto:${contact_data.email}`" target="_blank" class="text">{{ contact_data.email
-                            }}</a>
+                            <a :href="`mailto:${contact_email}`" target="_blank" class="text">
+                                {{ contact_email }}
+                            </a>
                         </div>
                     </div>
 
@@ -100,10 +101,10 @@
                     <div class="foot-content">
                         <h3 class="footer-head mb-4">{{ $t('footer.download') }}</h3>
                         <div class="footer-links">
-                            <a :href="android_link" target="_blank"  class="link mb-3" aria-label="Android Link">
+                            <a :href="android_link" target="_blank" class="link mb-3" aria-label="Android Link">
                                 <img loading="lazy" src="@/assets/imgs/google.png" class="app-link" alt="image">
                             </a>
-                            <a :href="apple_link" target="_blank"  class="link mb-3" aria-label="Apple Link">
+                            <a :href="apple_link" target="_blank" class="link mb-3" aria-label="Apple Link">
                                 <img loading="lazy" src="@/assets/imgs/app.png" class="app-link" alt="image">
                             </a>
                         </div>
@@ -118,13 +119,14 @@
         <div class="container">
             <div class="content">
                 <NuxtLink to="/" aria-label="route to home">
-                    <img  loading="lazy" src="@/assets/imgs/logo.png" class="logo" alt="image">
+                    <img loading="lazy" src="@/assets/imgs/logo.png" class="logo" alt="image">
                 </NuxtLink>
 
                 <div class="center">
                     <div class="social-icons mb-3 justify-content-center">
-                        <a :href="social.link" :title="`${social.name} Link`" class="social-ic" target="_blank" v-for="social in socials" :key="social.id">
-                            <img  loading="lazy" :src="social.icon" class="ic" alt="image" />
+                        <a :href="social.link" :title="`${social.name} Link`" class="social-ic" target="_blank"
+                            v-for="social in socials" :key="social.id">
+                            <img loading="lazy" :src="social.icon" class="ic" alt="image" />
                         </a>
                     </div>
 
@@ -132,7 +134,8 @@
                 </div>
 
                 <div class="buy_imgs">
-                    <img  loading="lazy" :src="img.icon" v-for="img in buy_imgs" :key="img.id" alt="image" class="buy_img">
+                    <img loading="lazy" :src="img.icon" v-for="img in buy_imgs" :key="img.id" alt="image"
+                        class="buy_img">
                 </div>
 
             </div>
@@ -155,7 +158,15 @@ const { successToast, errorToast } = toastMsg();
 // Axios
 const axios = useApi();
 
-/******************* Data *******************/
+// pinia store
+import { useGlobalStore } from '~/stores/global';
+
+/*************** DATA *****************/
+
+// Global Store
+const globalStore = useGlobalStore();
+const { countryID } = storeToRefs(globalStore);
+
 
 // Subscribe Email
 const emailForm = ref(null);
@@ -172,6 +183,8 @@ const socials = ref([]);
 
 // contact_data
 const contact_data = ref({});
+const contact_phone = ref('');
+const contact_email = ref('');
 
 // app links
 const android_link = ref('');
@@ -210,11 +223,13 @@ const getSocials = async () => {
         if (response(res) == "success") {
             socials.value = res.data.data.socials;
             contact_data.value = res.data.data.contact_data;
+            contact_phone.value = res.data.data.contact_data.phone;
+            contact_email.value = res.data.data.contact_data.email;
             android_link.value = res.data.data.android_link;
             apple_link.value = res.data.data.apple_link;
         }
     }).catch(err => {
-        console.error(err)
+        // console.error(err)
     });
 }
 
@@ -260,11 +275,6 @@ const addMail = async () => {
 }
 
 /******************* Computed *******************/
-// countryID 
-const countryID = computed(() => {
-    return '1'
-    // return localStorage.getItem('country') ? JSON.parse(localStorage.getItem('country')).id : '1'
-});
 
 // /******************* Watch *******************/
 

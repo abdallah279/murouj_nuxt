@@ -97,17 +97,12 @@ const selectedCountry = ref({});
 /******************* Props *******************/
 
 /******************* Methods *******************/
-
 // Get All countries
 const getCountries = async () => {
     await axios.get('countries').then(res => {
         if (response(res) == "success") {
             countries.value = res.data.data;
-            for (let i = 0; i < countries.value.length; i++) {
-                if (countries.value[i].id == 1) {
-                    selectedCountry.value = countries.value[i];
-                }
-            }
+            selectedCountry.value = countries.value[0];
         }
     }).catch(err => console.log(err));
 }
