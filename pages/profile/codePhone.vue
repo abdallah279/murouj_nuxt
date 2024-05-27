@@ -141,7 +141,8 @@ const resendCode = async () => {
 
 /******************* Required Auth *******************/
 definePageMeta({
-  middleware: 'auth'
+    middleware: ['auth'],
+  requierdAuth: true
 });
 
 </script>

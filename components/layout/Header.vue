@@ -465,9 +465,18 @@ const getCountries = async (getCity = false) => {
             countries.value = res.data.data;
 
             if (countryChanged.value == false && getCity) {
-                countryLocal.value = res.data.data[0];
-                getCities(res.data.data[0].id);
-                countryID.value = res.data.data[0].id;
+                for(let i = 0; i < res.data.data.length; i++) {
+                    console.log(res.data.data[i].key);
+                    if(res.data.data[i].key.includes(966)) {
+                        countryLocal.value = res.data.data[i];
+                        getCities(res.data.data[i].id);
+                        countryID.value = res.data.data[i].id;
+                    } else{
+                        countryLocal.value = res.data.data[0];
+                        getCities(res.data.data[0].id);
+                        countryID.value = res.data.data[0].id;
+                    }
+                }
             }
         }
     }).catch(err => console.log(err));

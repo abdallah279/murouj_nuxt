@@ -29,5 +29,8 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
   ],
+  router:{
+    middleware: ["auth"]
+  },
   devtools: { enabled: false },
 });

@@ -14,10 +14,11 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const nuxtApp = useNuxtApp();
   const t = nuxtApp.vueApp.config.globalProperties.$t;
 
-  if (isLoggedIn.value === false && to.meta.middleware == "auth") {
+  if (isLoggedIn.value === false && to.meta.requierdAuth) {
     // next(false);
     // redirect(from.path);
     errorToast(t("validation.requiresAuth"));
+    return navigateTo("/auth/login");
     // return false;
   }
 });

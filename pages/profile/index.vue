@@ -317,6 +317,7 @@ const cities = ref([]);
 // countries
 const countries = ref([]);
 const selectedCountry = ref({});
+const country_code = ref(null);
 
 /******************* Provide && Inject *******************/
 
@@ -369,10 +370,14 @@ const getCountries = async () => {
     await axios.get('countries').then(res => {
         if (response(res) == "success") {
             countries.value = res.data.data;
-            selectedCountry.value = countries.value[0];
+            // selectedCountry.value = countries.value[0];
             for (let i = 0; i < countries.value.length; i++) {
                 if (countries.value[i].id == country_id.value) {
                     country.value = countries.value[i];
+                }
+
+                if(countries.value[i].key.includes(country_code.value)) {
+                    selectedCountry.value = countries.value[i];
                 }
             }
         }
@@ -411,6 +416,7 @@ const profile = async () => {
         email.value = res.data.data.email;
         country_id.value = res.data.data.country_id;
         city_id.value = res.data.data.city_id;
+        country_code.value = res.data.data.country_code;
     }).catch(err => console.log(err));
 }
 
@@ -502,7 +508,8 @@ onMounted(async () => {
 
 /******************* Required Auth *******************/
 definePageMeta({
-  middleware: 'auth'
+    middleware: ['auth'],
+  requierdAuth: true
 });
 
 </script>
